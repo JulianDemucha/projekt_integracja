@@ -1,6 +1,8 @@
 package com.covid_stats.covid_stats.Services;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,24 +19,31 @@ public class ECommerceStatisticService {
 
     @PostConstruct
     public void load() {
+        Pattern pattern = Pattern.compile("ent;(.*?);;");  // Twój wzorzec regex
 
-        try (InputStream is = getClass().getResourceAsStream("/data.csv")) { //zeby automatycznie zamknelo is
+        try (InputStream is = getClass().getResourceAsStream("/data.csv")) {
             if (is == null) {
                 throw new IllegalStateException("Nie znaleziono /data.csv na classpath");
             }
-            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 
-            Pattern pattern = Pattern.compile("ent;(.*?);;");
-            Matcher matcher = pattern.matcher(content);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        String extracted = matcher.group(1);
+                        String[] split = extracted.replace(",", ".").split(";");
 
-            String extracted = matcher.group(1);
-            String[] split = extracted.replace(",", ".").split(";");
-
-            for (int i = 0; i < split.length; i++) {
-                stats.add(new ProcentPrzedsiebiorstw(
-                        Double.parseDouble(split[i].trim()),
-                        2013 + i
-                ));
+                        for (int i = 0; i < split.length; i++) {
+                            stats.add(new ProcentPrzedsiebiorstw(
+                                    Double.parseDouble(split[i].trim()),
+                                    2013 + i
+                            ));
+                        }
+                        // jeśli chcesz wczytać tylko pierwszą pasującą linię, to break tutaj:
+                        break;
+                    }
+                }
             }
         } catch (Exception e) {
             throw new IllegalStateException("Błąd wczytywania danych z data.csv", e);
