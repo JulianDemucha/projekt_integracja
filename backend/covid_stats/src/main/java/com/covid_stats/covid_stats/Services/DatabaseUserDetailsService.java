@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// TO SPRING SECURITYYYYYYYYYYYYYYYYYYYYYYYYYYY
-
 @Service
 public class DatabaseUserDetailsService implements UserDetailsService {
 
@@ -23,7 +21,7 @@ public class DatabaseUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         AppUser user = repo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Nie ma takiego użytkownika"));
+                .orElseThrow(() -> new UsernameNotFoundException("Użytkownik "+username+" nie istnieje"));
         return new User(
                 user.getUsername(),
                 user.getPassword(),

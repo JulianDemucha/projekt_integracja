@@ -40,7 +40,7 @@ public class ECommerceStatisticService {
                                     2013 + i
                             ));
                         }
-                        // jeśli chcesz wczytać tylko pierwszą pasującą linię, to break tutaj:
+
                         break;
                     }
                 }
