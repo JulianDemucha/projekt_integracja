@@ -15,15 +15,16 @@ public class CovidStatsApplication {
 		SpringApplication.run(CovidStatsApplication.class, args);
 	}
 
+// dodawanie usera roota przy starcie jak na nowej maszynie
 //	@Bean
 //	CommandLineRunner initUser(AppUserRepo repo, PasswordEncoder encoder) {
 //		return args -> {
-//			if (repo.findByUsername("user").isEmpty()) {
+//			if (repo.findByUsername("root").isEmpty()) {
 //				AppUser u = new AppUser();
-//				u.setUsername("user");
-//				u.setPassword(encoder.encode("password"));
+//				u.setUsername("root");
+//				u.setPassword(encoder.encode("root"));
 //				repo.save(u);
-//				System.out.println(">>> Utworzono użytkownika 'user' z hasłem 'password'");
+//				System.out.println(">>> Utworzono użytkownika 'root' z hasłem 'root'");
 //			}
 //		};
 //	}
