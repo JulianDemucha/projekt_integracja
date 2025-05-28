@@ -52,7 +52,7 @@ public class ECommerceStatisticService {
 
     public List<ECommerceEnterprisesPercent> getStats(int from, int to) {
         return stats.stream()
-                .filter(s -> s.getRok() >= from && s.getRok() <= to)
+                .filter(s -> s.getYear() >= from && s.getYear() <= to)
                 .toList();
     }
 }

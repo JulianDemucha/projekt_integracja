@@ -1,25 +1,21 @@
 package com.covid_stats.covid_stats.DTO;
 
+import lombok.Getter;
+
 public class ECommerceEnterprisesPercent {
-    double procent;
-    int rok;
+    @Getter
+    double percent;
+    @Getter
+    int year;
 
-    public ECommerceEnterprisesPercent(double procent, int rok) {
-        this.procent = procent;
-        this.rok = rok;
-    }
-
-    public double getProcent() {
-        return procent;
-    }
-
-    public int getRok() {
-        return rok;
+    public ECommerceEnterprisesPercent(double procent, int year) {
+        this.percent = procent;
+        this.year = year;
     }
 
     @Override
     public String toString() {
         return "Procent przedsiebiorstw umozliwiajacych zamawianie online w roku "
-                + rok + ": "+procent+"%";
+                + year + ": "+ percent +"%";
     }
 }
