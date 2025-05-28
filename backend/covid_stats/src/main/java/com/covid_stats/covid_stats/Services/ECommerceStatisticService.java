@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.covid_stats.covid_stats.Models.ProcentPrzedsiebiorstw;
+import com.covid_stats.covid_stats.DTO.ProcentPrzedsiebiorstw;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.covid_stats.covid_stats.Controllers;
 
 import com.covid_stats.covid_stats.Services.ECommerceStatisticService;
-import com.covid_stats.covid_stats.Models.ProcentPrzedsiebiorstw;
+import com.covid_stats.covid_stats.DTO.ProcentPrzedsiebiorstw;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

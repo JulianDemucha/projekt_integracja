@@ -1,4 +1,4 @@
-package com.covid_stats.covid_stats.Models;
+package com.covid_stats.covid_stats.DTO;
 
 public class ProcentPrzedsiebiorstw {
     double procent;
