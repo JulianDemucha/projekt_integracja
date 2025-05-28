@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.covid_stats.covid_stats.DTO.ProcentPrzedsiebiorstw;
+import com.covid_stats.covid_stats.DTO.ECommerceEnterprisesPercent;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ECommerceStatisticService {
-    private final List<ProcentPrzedsiebiorstw> stats = new ArrayList<>();
+    private final List<ECommerceEnterprisesPercent> stats = new ArrayList<>();
 
     @PostConstruct
     public void load() {
@@ -35,7 +35,7 @@ public class ECommerceStatisticService {
                         String[] split = extracted.replace(",", ".").split(";");
 
                         for (int i = 0; i < split.length; i++) {
-                            stats.add(new ProcentPrzedsiebiorstw(
+                            stats.add(new ECommerceEnterprisesPercent(
                                     Double.parseDouble(split[i].trim()),
                                     2013 + i
                             ));
@@ -50,7 +50,7 @@ public class ECommerceStatisticService {
         }
     }
 
-    public List<ProcentPrzedsiebiorstw> getStats(int from, int to) {
+    public List<ECommerceEnterprisesPercent> getStats(int from, int to) {
         return stats.stream()
                 .filter(s -> s.getRok() >= from && s.getRok() <= to)
                 .toList();

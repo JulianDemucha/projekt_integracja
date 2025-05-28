@@ -9,7 +9,7 @@ public class CovidStatsApplication {
 		SpringApplication.run(CovidStatsApplication.class, args);
 	}
 
-// dodawanie usera roota przy starcie jak na nowej maszynie
+// dodawanie usera roota przy starcie jezeli na nowej maszynie
 //	@Bean
 //	CommandLineRunner initUser(AppUserRepo repo, PasswordEncoder encoder) {
 //		return args -> {

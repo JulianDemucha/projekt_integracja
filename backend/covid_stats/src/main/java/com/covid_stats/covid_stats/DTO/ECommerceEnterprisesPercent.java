@@ -1,10 +1,10 @@
 package com.covid_stats.covid_stats.DTO;
 
-public class ProcentPrzedsiebiorstw {
+public class ECommerceEnterprisesPercent {
     double procent;
     int rok;
 
-    public ProcentPrzedsiebiorstw(double procent, int rok) {
+    public ECommerceEnterprisesPercent(double procent, int rok) {
         this.procent = procent;
         this.rok = rok;
     }
