@@ -22,6 +22,7 @@ public class AppUser {
     private String password;
 
     @Getter
+    @Setter
     private String role = "ROLE_USER";
 
 
