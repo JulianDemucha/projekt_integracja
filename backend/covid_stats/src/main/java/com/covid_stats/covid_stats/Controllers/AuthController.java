@@ -1,32 +1,41 @@
 package com.covid_stats.covid_stats.Controllers;
 
-import com.covid_stats.covid_stats.DTO.LoginRequest;
+import com.covid_stats.covid_stats.Models.AppUser;
+import com.covid_stats.covid_stats.Repositories.AppUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping
+@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authManager;
+    private AppUserRepo userRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+    public ResponseEntity<?> login(@RequestBody AppUser user) {
+        Optional<AppUser> existingUser = userRepo.findByUsername(user.getUsername());
 
-        Authentication auth = authManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        if (existingUser.isPresent()) {
+            AppUser foundUser = existingUser.get();
 
-        return ResponseEntity.ok("Zalogowano");
+            if (passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
+                foundUser.setPassword(null); // ;)
+                return ResponseEntity.ok(foundUser);
+            } else {
+                return ResponseEntity.status(401).body("Nieprawidłowe hasło");
+            }
+        } else {
+            return ResponseEntity.status(404).body("Użytkownik nie istnieje");
+        }
     }
+
 }

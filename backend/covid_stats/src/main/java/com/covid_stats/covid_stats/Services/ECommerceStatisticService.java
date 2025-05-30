@@ -19,7 +19,7 @@ public class ECommerceStatisticService {
 
     @PostConstruct
     public void load() {
-        Pattern pattern = Pattern.compile("ent;(.*?);;");  // Twój wzorzec regex
+        Pattern pattern = Pattern.compile("ent;(.*?);;");
 
         try (InputStream is = getClass().getResourceAsStream("/data.csv")) {
             if (is == null) {

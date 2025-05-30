@@ -2,9 +2,8 @@ package com.covid_stats.covid_stats.Controllers;
 
 import com.covid_stats.covid_stats.Services.ECommerceStatisticService;
 import com.covid_stats.covid_stats.DTO.ECommerceEnterprisesPercent;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -15,6 +14,7 @@ public class ECommerceStatisticController {
         this.service = service;
     }
 
+    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/api/stats")
     public List<ECommerceEnterprisesPercent> stats(
             @RequestParam(name="from", defaultValue="2013") int from,
