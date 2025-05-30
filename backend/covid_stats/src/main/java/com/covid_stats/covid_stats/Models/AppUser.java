@@ -8,6 +8,8 @@ import java.util.List;
 @Entity
 public class AppUser {
     @Id
+    @Getter
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
