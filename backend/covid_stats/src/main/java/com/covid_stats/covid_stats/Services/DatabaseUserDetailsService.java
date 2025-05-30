@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-// TO SPRING SECURITYYYYYYYYYYYYYYYYYYYYYYYYYYY
-
 @Service
 public class DatabaseUserDetailsService implements UserDetailsService {
 
