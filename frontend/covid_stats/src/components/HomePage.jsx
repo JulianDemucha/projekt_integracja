@@ -1,6 +1,7 @@
 import React from 'react';
 import ECommerceChart from "./ECommerceChart.jsx";
 import FilteredTypesChart from "./FilteredTypesCharts.jsx";
+import UserMenu from "./UserMenu.jsx";
 
 export default function HomePage() {
     return (

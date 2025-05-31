@@ -1,28 +1,58 @@
+// src/App.jsx
+
 import './App.css'
-import {Link, Route, Routes} from "react-router-dom";
-import LoginForm from "./components/LoginForm.jsx";
-import RegisterForm from "./components/RegisterForm.jsx";
-import { BrowserRouter as Router } from 'react-router-dom'
-import HomePage from "./components/HomePage.jsx";
-function App() {
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    useLocation
+} from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+
+import HomePage from './components/HomePage.jsx'
+import LoginForm from './components/LoginForm.jsx'
+import RegisterForm from './components/RegisterForm.jsx'
+import UserMenu from './components/UserMenu.jsx'
+
+function AppContent() {
+    const [user, setUser] = useState(null)
+    const location = useLocation() // Tutaj jest już w kontekście <Router>
+
+    useEffect(() => {
+        const stored = localStorage.getItem('user')
+        if (stored) {
+            const parsed = JSON.parse(stored)
+            axios.defaults.headers.common['Authorization'] = `Bearer ${parsed.token}`
+            setUser(parsed)
+        }
+    }, [])
 
     return (
         <>
-            <Router>
-                <nav >
-                    <Link to="/">Home </Link>
-                    <Link to="/register"> Rejestracja </Link>
-                    <Link to="/auth/login"> Logowanie</Link>
-                </nav>
+            {/*
+      */}
+            {(location.pathname !== '/auth/login' && location.pathname !== '/register') &&  (
+                <UserMenu user={user} setUser={setUser} />
+            )}
 
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/register" element={<RegisterForm />} />
-                    <Route path="/auth/login" element={<LoginForm />} />
-                </Routes>
-            </Router>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route
+                    path="/auth/login"
+                    element={<LoginForm setUser={setUser} />}
+                />
+                <Route path="/register" element={<RegisterForm />} />
+            </Routes>
         </>
-    );
+    )
 }
-    export default App
 
+export default function App() {
+    return (
+        // Tutaj umieszczamy <Router> tak, żeby AppContent miał dostęp do useLocation()
+        <Router>
+            <AppContent />
+        </Router>
+    )
+}

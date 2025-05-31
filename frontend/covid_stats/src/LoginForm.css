@@ -1,0 +1,126 @@
+/* ----------------------------------------------------
+   Style dla LoginForm
+   - lekko ciemniejszy panel niż tło (#242424)
+   - kwadratowy, zaokrąglone rogi
+   - estetyczne odstępy i przyciski
+---------------------------------------------------- */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Zakładamy, że tło strony to #242424 */
+    min-height: calc(100vh - 2rem); /* zajmuje całą wysokość minus margines */
+    padding: 1rem;
+}
+
+.login-panel {
+    background-color: #1e1e1e;   /* lekko ciemniejszy niż #242424 */
+    border-radius: 8px;
+    padding: 2rem 2.5rem;
+    width: 320px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    color: #f1f1f1;
+}
+
+.login-panel h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #ffffff;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.field-group label {
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: #dddddd;
+}
+
+.login-input {
+    padding: 0.5rem;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.login-input::placeholder {
+    color: #888888;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #666666;
+}
+
+.error-text {
+    margin-bottom: 1rem;
+    color: #ff6666;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.login-button {
+    width: 100%;
+    padding: 0.6rem;
+    margin-top: 0.5rem;
+    background-color: #3b82f6; /* niebieski przycisk */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-button:disabled {
+    background-color: #5a9cf8;
+    cursor: not-allowed;
+}
+
+.login-button:hover:not(:disabled) {
+    background-color: #2563eb;
+}
+
+.login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.login-footer p {
+    font-size: 0.9rem;
+    color: #cccccc;
+    margin-bottom: 0.8rem;
+}
+
+.register-link {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.back-button {
+    margin-top: 0.5rem;
+    background-color: #444444;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.back-button:hover {
+    background-color: #2c2c2c;
+}
