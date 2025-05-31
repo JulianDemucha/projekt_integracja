@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "io": "^1.5.3",
+    "jsonwebtoken": "^9.0.2",
+    "maven": "^5.0.0",
+    "mvn": "^3.5.0",
     "tomcat": "^1.0.0"
   }
 }

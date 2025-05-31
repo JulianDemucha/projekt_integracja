@@ -102,9 +102,9 @@ export default function FilteredTypesChart() {
     // Kolory dla typów
     const COLORS = {
         restauracje: '#8884d8',
-        bary: '#82ca9d',
+        bary: '#ff7300',
         'stołówki': '#ffc658',
-        'punkty gastronomiczne': '#ff7300',
+        'punkty gastronomiczne': '#82ca9d',
     };
 
     return (
