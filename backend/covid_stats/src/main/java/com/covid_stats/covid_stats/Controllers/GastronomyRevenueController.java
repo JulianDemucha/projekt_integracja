@@ -3,9 +3,7 @@ package com.covid_stats.covid_stats.Controllers;
 import com.covid_stats.covid_stats.DTO.GastronomyRevenue;
 import com.covid_stats.covid_stats.Services.GastronomyRevenueService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +18,7 @@ public class GastronomyRevenueController {
     public GastronomyRevenueController(GastronomyRevenueService revenueService) {
         this.revenueService = revenueService;
     }
+    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/stats2")
     public ResponseEntity<Map<String, List<GastronomyRevenue>>> loadData() {
         try {

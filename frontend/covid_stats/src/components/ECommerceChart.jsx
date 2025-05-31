@@ -35,7 +35,11 @@ export default function ECommerceChart() {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="year" tickFormatter={(tick) => String(tick)} />
                     <YAxis unit="%" />
-                    <Tooltip formatter={(value) => `${value}%`} />
+                    <Tooltip
+                        itemStyle={{color: 'rgba(200, 200, 200, 0.9)'}}
+                        contentStyle={{ borderRadius: 10, background: 'rgba(50, 50, 50, 0.85)' /* 85% transparent */}}
+                        labelStyle={{ color: 'rgba(200, 200, 200, 1)'}}
+                    formatter={(value) => `${value}%`} />
 
                     <Legend
                         wrapperStyle={{ color: '#333333', fontSize: '14px' }}

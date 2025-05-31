@@ -5,7 +5,6 @@ import com.covid_stats.covid_stats.Services.GastronomyFacilitiesQuantityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +19,13 @@ public class GastronomyFacilitiesQuantityContrroller {
     public GastronomyFacilitiesQuantityContrroller(GastronomyFacilitiesQuantityService objectsService) {
         this.objectsService = objectsService;
     }
-
+    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/stats3")
     public ResponseEntity<?> getObjectsCount() {
         try {
-            // Wczytujemy mapę, w której kluczem jest np. "POLSKA", a wartością lista obiektów
             Map<String, List<GastronomyFacilitiesQuantity>> data =
                     objectsService.loadObjectsCountData("data3.csv");
 
-            // Teraz „spłaszczamy” tę mapę do jednej wspólnej listy:
             List<GastronomyFacilitiesQuantity> flatList = new ArrayList<>();
             for (List<GastronomyFacilitiesQuantity> listaPoRegionie : data.values()) {
                 flatList.addAll(listaPoRegionie);
