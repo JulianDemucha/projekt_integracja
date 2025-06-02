@@ -10,9 +10,9 @@ import {
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-import HomePage from './components/HomePage.jsx'
-import LoginForm from './components/LoginForm.jsx'
-import RegisterForm from './components/RegisterForm.jsx'
+import HomePage from './views/HomePage.jsx'
+import LoginForm from './views/LoginForm.jsx'
+import RegisterForm from './views/RegisterForm.jsx'
 import UserMenu from './components/UserMenu.jsx'
 
 function AppContent() {

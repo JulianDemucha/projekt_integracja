@@ -18,15 +18,20 @@ public class GastronomyRevenueController {
     public GastronomyRevenueController(GastronomyRevenueService revenueService) {
         this.revenueService = revenueService;
     }
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/stats2")
-    public ResponseEntity<Map<String, List<GastronomyRevenue>>> loadData() {
+    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
+    public ResponseEntity<List<GastronomyRevenue>> loadData() {
         try {
             Map<String, List<GastronomyRevenue>> dataMap =
                     revenueService.loadGastronomyRevenueDataFromClasspath("data2.csv");
-            return ResponseEntity.ok(dataMap);
+
+
+            List<GastronomyRevenue> data = dataMap.values().stream().findFirst().orElse(List.of());
+
+            return ResponseEntity.ok(data);
         } catch (IOException e) {
             return ResponseEntity.status(500).build();
         }
     }
+
 }

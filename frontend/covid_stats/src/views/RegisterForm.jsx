@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import './RegisterForm.css'
+import '../RegisterForm.css'
 
 export default function RegisterForm() {
     const [form, setForm] = useState({

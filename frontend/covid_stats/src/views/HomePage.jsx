@@ -1,7 +1,8 @@
 import React from 'react';
-import ECommerceChart from "./ECommerceChart.jsx";
-import FilteredTypesChart from "./FilteredTypesCharts.jsx";
-import UserMenu from "./UserMenu.jsx";
+import ECommerceChart from "../components/ECommerceChart.jsx";
+import FilteredTypesChart from "../components/FilteredTypesCharts.jsx";
+import UserMenu from "../components/UserMenu.jsx";
+import GastronomyRevenueChart from "../components/GastronomyRevenueChart.jsx";
 
 export default function HomePage() {
     return (
@@ -43,6 +44,8 @@ export default function HomePage() {
                 organizacyjne, które spowalniały ten proces.
             </h3>
             {<ECommerceChart/>}
+
+            {<GastronomyRevenueChart/>}
 
 
         </div>
