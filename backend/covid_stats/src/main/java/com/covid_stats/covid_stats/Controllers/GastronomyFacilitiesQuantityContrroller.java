@@ -31,7 +31,6 @@ public class GastronomyFacilitiesQuantityContrroller {
                 flatList.addAll(listaPoRegionie);
             }
 
-            // Zwracamy już samą listę obiektów:
             return ResponseEntity.ok(flatList);
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,22 +1,13 @@
-/* src/components/RegisterForm.css */
-
-/* ----------------------------------------------------
-   Style dla RegisterForm
-   - lekko ciemniejszy panel niż tło (#242424)
-   - kwadratowy, zaokrąglone rogi
-   - estetyczne odstępy i przyciski
----------------------------------------------------- */
-
 .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 2rem); /* zajmuje całą wysokość minus margines */
+    min-height: calc(100vh - 2rem);
     padding: 1rem;
 }
 
 .register-panel {
-    background-color: #1e1e1e;   /* lekko ciemniejszy niż #242424 */
+    background-color: #1e1e1e;
     border-radius: 8px;
     padding: 2rem 2.5rem;
     width: 320px;
@@ -72,7 +63,7 @@
     width: 100%;
     padding: 0.6rem;
     margin-top: 0.5rem;
-    background-color: #3b82f6; /* niebieski przycisk */
+    background-color: #3b82f6;
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -128,7 +119,7 @@
 
 .success-text {
     font-size: 1rem;
-    color: #a5f3a5; /* delikatny zielony dla potwierdzenia */
+    color: #a5f3a5;
     text-align: center;
     margin-bottom: 1rem;
 }

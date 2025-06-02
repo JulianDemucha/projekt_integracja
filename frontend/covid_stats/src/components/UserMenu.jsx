@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import '../UserMenu.css'  // <-- tutaj wczytujemy nowe style
+import '../UserMenu.css'
 
 export default function UserMenu({ user, setUser }) {
     const [open, setOpen] = useState(false)

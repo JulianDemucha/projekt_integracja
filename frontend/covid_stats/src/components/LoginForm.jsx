@@ -30,7 +30,6 @@ export default function LoginForm({ setUser }) {
                 }
             )
 
-            // backend musi zwracać JSON: { token, username, role, id }
             const userData = res.data
 
             localStorage.setItem('user', JSON.stringify(userData))
@@ -38,8 +37,7 @@ export default function LoginForm({ setUser }) {
             setUser(userData)
 
             console.log('Zalogowano:', userData)
-            // Po zalogowaniu możemy przekierować na stronę główną
-            navigate('/')
+            navigate('/') // przekierowanie homepage
         } catch (err) {
             console.error(err)
             setError('Nieprawidłowy login lub hasło')

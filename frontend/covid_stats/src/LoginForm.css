@@ -1,21 +1,14 @@
-/* ----------------------------------------------------
-   Style dla LoginForm
-   - lekko ciemniejszy panel niż tło (#242424)
-   - kwadratowy, zaokrąglone rogi
-   - estetyczne odstępy i przyciski
----------------------------------------------------- */
 
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Zakładamy, że tło strony to #242424 */
-    min-height: calc(100vh - 2rem); /* zajmuje całą wysokość minus margines */
+    min-height: calc(100vh - 2rem);
     padding: 1rem;
 }
 
 .login-panel {
-    background-color: #1e1e1e;   /* lekko ciemniejszy niż #242424 */
+    background-color: #1e1e1e;
     border-radius: 8px;
     padding: 2rem 2.5rem;
     width: 320px;

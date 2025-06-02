@@ -50,7 +50,7 @@ function AppContent() {
 
 export default function App() {
     return (
-        // Tutaj umieszczamy <Router> tak, żeby AppContent miał dostęp do useLocation()
+        // tutaj zeby AppContent mial dostep do useLocation()
         <Router>
             <AppContent />
         </Router>

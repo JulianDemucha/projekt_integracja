@@ -23,18 +23,17 @@
     margin-right: 0;     /* nie potrzebujemy marginesu od prawej, bo już jest przyklejony */
 }
 
-/* Panel wysuwany pod przyciskiem */
 .user-dropdown {
     position: absolute;
-    top: 3rem;           /* odległość od górnej krawędzi rodzica (.user-menu) */
-    right: 0;            /* przylega do prawego boku */
-    background: #1e1e1e; /* tło pasujące do głównego koloru strony */
-    color: #ffffff;      /* biały tekst */
-    border: none;        /* obramowania nie potrzebujemy, bo tło jest jednolite */
-    border-radius: 10px 0 0 10px; /* nieco zaokrąglony lewy dolny róg */
-    padding: 1rem;       /* większe odstępy wewnątrz, by panel był „wyższy” */
-    width: 100px;        /* nieco większa szerokość, jeśli chcesz więcej miejsca na tekst */
-    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.3); /* cień z lewej strony, by panel się odcinał od tła */
+    top: 3rem;
+    right: 0;
+    background: #1e1e1e;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px 0 0 10px;
+    padding: 1rem;
+    width: 100px;
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Linki w panelu */
@@ -50,10 +49,10 @@
     border-radius: 10px;
 }
 
-/* Przycisk wylogowania wewnątrz panelu */
+/* przycisk wylogowania */
 .user-dropdown button {
     width: 100%;
-    background: #e53935;  /* możemy zostawić czerwony “Wyloguj”, ale na tle #242424 to będzie kontrast */
+    background: #e53935;
     color: #ffffff;
     border: none;
     padding: 0.5rem;
@@ -66,7 +65,6 @@
     background: #d32f2f;
 }
 
-/* Tekst powitalny wewnątrz panelu */
 .user-dropdown p {
     margin-bottom: 0.5rem;
     font-size: 0.9rem;

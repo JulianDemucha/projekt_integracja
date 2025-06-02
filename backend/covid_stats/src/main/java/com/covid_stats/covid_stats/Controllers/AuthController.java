@@ -28,7 +28,7 @@ public class AuthController {
             AppUser foundUser = existingUser.get();
 
             if (passwordEncoder.matches(user.getPassword(), foundUser.getPassword())) {
-                foundUser.setPassword(null); // ;)
+                foundUser.setPassword(null);        // ;)
                 return ResponseEntity.ok(foundUser);
             } else {
                 return ResponseEntity.status(401).body("Nieprawidłowe hasło");
