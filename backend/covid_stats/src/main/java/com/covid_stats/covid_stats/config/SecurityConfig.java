@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity  // Włączamy możliwość użycia @PreAuthorize itp.
+@EnableMethodSecurity  // @PreAuthorize itp.
 public class SecurityConfig {
 
     @Bean
@@ -33,22 +33,29 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // 1) Wszystkie GETy do komentarzy są publiczne
+                        // wszystkie GETY komentarzy na public
                         .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/stats", "/api/stats2", "/api/stats3").permitAll()
-                        // 2) Logowanie i /auth/** są publiczne
+
+                        // logowanie
                         .requestMatchers("/auth/**").permitAll()
-                        // 3) Rejestracja nowego użytkownika (POST /users) jest publiczna
+
+                        /* POST do rejestracji (niestety nie ma zadnej capathy ani weryfikacji maila,
+                        ale moze ktos nie z ddosuje) */
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        // 4) Pozostałe operacje na /users/** (GET, PUT itd.) – tylko ADMIN
+
+                        // GET,PUT na users dla adm w razie co
                         .requestMatchers("/users/**").hasRole("ADMIN")
-                        // 5) Tworzenie lub odpowiadanie na komentarz – każdy zalogowany
+
+                        // POST na komentarze (tworzenie dla zalogowanych)
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
-                        // 6) Usuwanie komentarzy – każdy zalogowany, ale dopiero @PreAuthorize w kontrolerze sprawdzi autorstwo/ADMIN
+                        // DELETE na komentarze (niby dla zalogowanych ale w kontrolerze jest preauthorize
+                        // "hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)"
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
-                        // 7) Wszystkie pozostałe requesty – wymagają uwierzytelnienia
-                        .anyRequest().authenticated()
+
+                        // wszystkie pozostałe requesty – dla roli admin
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .httpBasic(Customizer.withDefaults());
 
@@ -59,17 +66,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // dokładny adres frontendu
+        // dokladny adres frontendu
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         // zezwolone metody
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        // zezwolone nagłówki
+        // zezwolone naglowki
         config.setAllowedHeaders(List.of("*"));
-        // zezwalamy na wysyłanie credentiali (np. ciasteczek lub nagłówka Authorization)
+        // wysyłanie credentiali (np. ciasteczek lub naglowka Authorization)
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // dopuszczamy CORS dla endpointów komentujących, auth, użytkownicy itp.:
+        // CORS dla endpointów
         source.registerCorsConfiguration("/api/**", config);
         source.registerCorsConfiguration("/auth/**", config);
         source.registerCorsConfiguration("/users/**", config);
