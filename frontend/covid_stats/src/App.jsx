@@ -16,28 +16,30 @@ import RegisterForm from './views/RegisterForm.jsx'
 import UserMenu from './components/UserMenu.jsx'
 
 function AppContent() {
-    const [user, setUser] = useState(null)
-    const location = useLocation() // Tutaj jest już w kontekście <Router>
+    const [user, setUser] = useState(null);
+    const location = useLocation();
 
     useEffect(() => {
-        const stored = localStorage.getItem('user')
+        const stored = localStorage.getItem('user');
         if (stored) {
-            const parsed = JSON.parse(stored)
-            axios.defaults.headers.common['Authorization'] = `Bearer ${parsed.token}`
-            setUser(parsed)
+            const parsed = JSON.parse(stored);
+            axios.defaults.headers.common[
+                'Authorization'
+                ] = `Bearer ${parsed.token}`;
+            setUser(parsed);
         }
-    }, [])
+    }, []);
 
     return (
         <>
-            {/*
-      */}
-            {(location.pathname !== '/auth/login' && location.pathname !== '/register') &&  (
-                <UserMenu user={user} setUser={setUser} />
-            )}
+            {/* Pokaż menu użytkownika, jeśli nie jest ekran logowania/rejestracji */}
+            {location.pathname !== '/auth/login' &&
+                location.pathname !== '/register' && (
+                    <UserMenu user={user} setUser={setUser} />
+                )}
 
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePage user={user} />} />
                 <Route
                     path="/auth/login"
                     element={<LoginForm setUser={setUser} />}
@@ -45,14 +47,14 @@ function AppContent() {
                 <Route path="/register" element={<RegisterForm />} />
             </Routes>
         </>
-    )
+    );
 }
 
 export default function App() {
     return (
-        // tutaj zeby AppContent mial dostep do useLocation()
+        // Tutaj, żeby AppContent miał dostęp do useLocation()
         <Router>
             <AppContent />
         </Router>
-    )
+    );
 }

@@ -1,55 +1,53 @@
-// src/components/RegisterForm.jsx
-
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import '../RegisterForm.css'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../RegisterForm.css';
 
 export default function RegisterForm() {
     const [form, setForm] = useState({
         username: '',
         password: '',
-        confirmPassword: ''
-    })
-    const [error, setError]     = useState(null)
-    const [success, setSuccess] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
+        confirmPassword: '',
+    });
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleChange = e => {
-        const { name, value } = e.target
-        setForm(prev => ({ ...prev, [name]: value }))
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
 
-    const handleSubmit = async e => {
-        e.preventDefault()
-        setError(null)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
 
         if (!form.username || !form.password) {
-            setError('Wypełnij wszystkie pola.')
-            return
+            setError('Wypełnij wszystkie pola.');
+            return;
         }
         if (form.password !== form.confirmPassword) {
-            setError('Hasła nie są takie same.')
-            return
+            setError('Hasła nie są takie same.');
+            return;
         }
 
-        setLoading(true)
+        setLoading(true);
         try {
-            const res = await axios.post(
-                'http://localhost:8080/users',
-                { username: form.username, password: form.password }
-            )
-            console.log('Zarejestrowano:', res.data)
-            setSuccess(true)
-            setForm({ username: '', password: '', confirmPassword: '' })
+            const res = await axios.post('http://localhost:8080/users', {
+                username: form.username,
+                password: form.password,
+            });
+            console.log('Zarejestrowano:', res.data);
+            setSuccess(true);
+            setForm({ username: '', password: '', confirmPassword: '' });
         } catch (err) {
-            console.error(err)
-            setError(err.response?.data || 'Błąd rejestracji')
+            console.error(err);
+            setError(err.response?.data || 'Błąd rejestracji');
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     if (success) {
         return (
@@ -71,7 +69,7 @@ export default function RegisterForm() {
                     </div>
                 </div>
             </div>
-        )
+        );
     }
 
     return (
@@ -151,5 +149,5 @@ export default function RegisterForm() {
                 </div>
             </div>
         </div>
-    )
+    );
 }

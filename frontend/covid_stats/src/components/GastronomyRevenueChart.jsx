@@ -22,7 +22,7 @@ export default function GastronomyRevenueChart() {
     }, []);
 
     return (
-        <div style={{ width: 600, height: 300, margin: 'auto' }}>
+        <div style={{ width: 700, height: 400, margin: 'auto' }}>
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                     data={data}
@@ -53,7 +53,7 @@ export default function GastronomyRevenueChart() {
                         dataKey="revenue"
                         name="Przychody gastronomii"
                         stroke="#8884d8"
-                        strokeWidth={2}
+                        strokeWidth={5}
                         dot={{ r: 3 }}
                         activeDot={{ r: 6 }}
                         isAnimationActive={true}
