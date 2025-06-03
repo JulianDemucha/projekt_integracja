@@ -81,7 +81,7 @@ const CommentsList = ({ user }) => {
                         disabled={!user}
                         style={{ marginBottom: '10px' }}
                     >
-                        Dodaj komentarz
+                        {user ? "Dodaj komentarz" : "Musisz być zalogowany, żeby dodać komentarz"}
                     </button>
                     {errorAdding && (
                         <p className="error-message">{errorAdding}</p>

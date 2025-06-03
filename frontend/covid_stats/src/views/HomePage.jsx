@@ -1,6 +1,6 @@
 import React from 'react';
 import ECommerceChart from '../components/ECommerceChart.jsx';
-import FilteredTypesChart from '../components/FilteredTypesCharts.jsx';
+import FilteredTypesChart from '../components/FilteredTypesChart.jsx';
 import UserMenu from '../components/UserMenu.jsx';
 import GastronomyRevenueChart from '../components/GastronomyRevenueChart.jsx';
 import CommentsList from '../components/CommentsList.jsx';
@@ -82,9 +82,12 @@ export default function HomePage({ user }) {
 
             <GastronomyRevenueChart />
 
+
+
             <div className="max-w-2xl mx-auto">
                 <CommentsList user={user} />
             </div>
+
         </div>
     );
 }

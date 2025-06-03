@@ -14,6 +14,7 @@ import HomePage from './views/HomePage.jsx'
 import LoginForm from './views/LoginForm.jsx'
 import RegisterForm from './views/RegisterForm.jsx'
 import UserMenu from './components/UserMenu.jsx'
+import Footer from "./components/Footer.jsx";
 
 function AppContent() {
     const [user, setUser] = useState(null);
@@ -46,6 +47,7 @@ function AppContent() {
                 />
                 <Route path="/register" element={<RegisterForm />} />
             </Routes>
+            <Footer></Footer>
         </>
     );
 }
