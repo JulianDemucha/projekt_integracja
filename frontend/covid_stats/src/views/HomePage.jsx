@@ -4,6 +4,8 @@ import FilteredTypesChart from '../components/FilteredTypesCharts.jsx';
 import UserMenu from '../components/UserMenu.jsx';
 import GastronomyRevenueChart from '../components/GastronomyRevenueChart.jsx';
 import CommentsList from '../components/CommentsList.jsx';
+import '../comments.css';
+
 
 export default function HomePage({ user }) {
     return (

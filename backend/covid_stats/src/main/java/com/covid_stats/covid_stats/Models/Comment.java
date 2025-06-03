@@ -1,5 +1,6 @@
 package com.covid_stats.covid_stats.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -36,11 +37,13 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     @JsonIgnoreProperties({"replies"})
+    @JsonBackReference
     @Getter @Setter
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @JsonBackReference
     @Getter @Setter
     private List<Comment> replies = new ArrayList<>();
 

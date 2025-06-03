@@ -1,10 +1,13 @@
+// src/components/RepliesList.jsx
 import React, { useEffect, useState } from 'react';
 import { fetchReplies } from '../api/comments';
+import axios from 'axios';
 
-const RepliesList = ({ parentId }) => {
+const RepliesList = ({ parentId, user }) => {
     const [repliesPage, setRepliesPage] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [deletingId, setDeletingId] = useState(null); // ID odpowiedzi w trakcie usuwania
 
     const loadReplies = async (page) => {
         setLoading(true);
@@ -14,6 +17,7 @@ const RepliesList = ({ parentId }) => {
             setCurrentPage(data.number);
         } finally {
             setLoading(false);
+            setDeletingId(null);
         }
     };
 
@@ -22,49 +26,78 @@ const RepliesList = ({ parentId }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [parentId]);
 
-    const handlePrev = () => {
-        if (currentPage > 0) loadReplies(currentPage - 1);
-    };
-
-    const handleNext = () => {
-        if (repliesPage && currentPage < repliesPage.totalPages - 1) {
-            loadReplies(currentPage + 1);
+    const handleDeleteReply = async (replyId) => {
+        if (!window.confirm('Na pewno chcesz usunąć tę odpowiedź?')) return;
+        setDeletingId(replyId);
+        try {
+            await axios.delete(`http://localhost:8080/api/comments/${replyId}`);
+            loadReplies(currentPage);
+        } catch (err) {
+            console.error('Błąd podczas usuwania odpowiedzi:', err);
+            alert('Nie udało się usunąć odpowiedzi. Sprawdź konsolę.');
+            setDeletingId(null);
         }
     };
 
     return (
         <div>
-            {loading && <p>Ładowanie odpowiedzi...</p>}
+            {loading && (
+                <p className="text-sm text-center">Ładowanie odpowiedzi…</p>
+            )}
 
             {!loading && repliesPage && (
                 <>
-                    {repliesPage.content.map((reply) => (
-                        <div key={reply.id} className="border-l pl-2 mb-2">
-                            <p className="font-semibold">{reply.author.username}</p>
-                            <p>{reply.content}</p>
-                            <p className="text-xs text-gray-500">
-                                {new Date(reply.createdAt).toLocaleString('pl-PL')}
-                            </p>
-                        </div>
-                    ))}
+                    {repliesPage.content.map((reply) => {
+                        const authorName = reply.author?.username || 'Anonim';
+                        const canDeleteReply =
+                            user?.role === 'ROLE_ADMIN' || user?.id === reply.author?.id;
 
-                    <div className="flex justify-between mt-2 mb-4">
+                        return (
+                            <div key={reply.id} className="reply-item">
+                                <div className="reply-header">
+                                    <p className="reply-author">{authorName}</p>
+                                    <div className="reply-meta">
+                                        <p className="reply-date">
+                                            {new Date(reply.createdAt).toLocaleString('pl-PL')}
+                                        </p>
+                                        {canDeleteReply && (
+                                            <button
+                                                onClick={() => handleDeleteReply(reply.id)}
+                                                disabled={deletingId === reply.id}
+                                                className="reply-delete-btn"
+                                                title="Usuń odpowiedź"
+                                                type="button"
+                                            >
+                                                ×
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                                <p className="reply-content">{reply.content}</p>
+                            </div>
+                        );
+                    })}
+
+                    {/* Paginacja odpowiedzi */}
+                    <div className="pagination">
                         <button
-                            onClick={handlePrev}
+                            onClick={() => currentPage > 0 && loadReplies(currentPage - 1)}
                             disabled={currentPage === 0}
-                            className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 text-xs"
                         >
                             Poprzednie
                         </button>
-                        <span className="text-xs">
-              Strona {currentPage + 1} z {repliesPage.totalPages}
-            </span>
+                        <span className="page-info">
+                            Strona {currentPage + 1} z {repliesPage.totalPages}
+                        </span>
                         <button
-                            onClick={handleNext}
+                            onClick={() =>
+                                repliesPage &&
+                                currentPage < repliesPage.totalPages - 1 &&
+                                loadReplies(currentPage + 1)
+                            }
                             disabled={
                                 repliesPage ? currentPage === repliesPage.totalPages - 1 : true
                             }
-                            className="px-2 py-1 bg-gray-200 rounded disabled:opacity-50 text-xs"
                         >
                             Następne
                         </button>

@@ -1,20 +1,22 @@
+// src/api/comments.js
 import axios from 'axios';
 
-// Ustawiamy od razu pełny adres backendu Spring Boot.
-// Jeśli w przyszłości przeniesiesz backend na inny adres/port, usprawnij tutaj.
 const API_BASE = 'http://localhost:8080';
-const PAGE_SIZE = 10;
+
+// Liczba root-komentarzy na stronę: 10
+const ROOT_PAGE_SIZE = 10;
+// Liczba odpowiedzi na stronę: 5
+const REPLIES_PAGE_SIZE = 5;
 
 export const fetchRootComments = async (page = 0) => {
     const url = `${API_BASE}/api/comments/roots`;
     try {
         const response = await axios.get(url, {
-            params: { page, size: PAGE_SIZE },
+            params: { page, size: ROOT_PAGE_SIZE },
         });
         return response.data; // { content: [...], totalPages, number, ... }
     } catch (error) {
         console.error('fetchRootComments – błąd HTTP:', error.response || error);
-        // Zwracamy domyślny obiekt, żeby frontend nie rzucał błędem `.map`
         return { content: [], totalPages: 0, number: 0 };
     }
 };
@@ -23,7 +25,8 @@ export const fetchReplies = async (parentId, page = 0) => {
     const url = `${API_BASE}/api/comments/${parentId}/replies`;
     try {
         const response = await axios.get(url, {
-            params: { page, size: PAGE_SIZE },
+            // Teraz pobieramy 5 odpowiedzi na stronę zamiast 10
+            params: { page, size: REPLIES_PAGE_SIZE },
         });
         return response.data;
     } catch (error) {

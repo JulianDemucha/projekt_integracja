@@ -39,6 +39,13 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        // tutaj można dodać dodatkową weryfikację np. czy komentarz istnieje
+        commentRepository.deleteById(id);
+    }
+
+
     // tworzy odpowiedź na istniejący komentarz
     @Transactional
     public Comment addReply(Long parentId, String content, Long userId) {

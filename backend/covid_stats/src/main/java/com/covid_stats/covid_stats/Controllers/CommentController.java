@@ -55,6 +55,13 @@ public class CommentController {
         return ResponseEntity.ok(created);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+        commentService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
     /**
      * 3) Dodaj odpowiedź do istniejącego komentarza.
      *    Endpoint: /api/comments/reply/{parentId}
@@ -112,3 +119,4 @@ class AddCommentRequest {
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 }
+
