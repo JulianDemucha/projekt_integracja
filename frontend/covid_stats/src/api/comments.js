@@ -25,7 +25,6 @@ export const fetchReplies = async (parentId, page = 0) => {
     const url = `${API_BASE}/api/comments/${parentId}/replies`;
     try {
         const response = await axios.get(url, {
-            // Teraz pobieramy 5 odpowiedzi na stronę zamiast 10
             params: { page, size: REPLIES_PAGE_SIZE },
         });
         return response.data;
@@ -53,6 +52,16 @@ export const postReply = async (parentId, userId, content) => {
         return response.data;
     } catch (error) {
         console.error('postReply – błąd HTTP:', error.response || error);
+        throw error;
+    }
+};
+
+export const deleteCommentById = async (commentId) => {
+    const url = `${API_BASE}/api/comments/${commentId}`;
+    try {
+        await axios.delete(url);
+    } catch (error) {
+        console.error('deleteCommentById – błąd HTTP:', error.response || error);
         throw error;
     }
 };

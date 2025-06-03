@@ -1,21 +1,23 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-import '../UserMenu.css'
+// src/components/UserMenu.jsx
+import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import '../UserMenu.css';
+import { AuthContext } from '../context/AuthContext';
 
-export default function UserMenu({ user, setUser }) {
-    const [open, setOpen] = useState(false)
+export default function UserMenu() {
+    const [open, setOpen] = useState(false);
+    const { user, logout } = useContext(AuthContext);
 
     const toggleMenu = () => {
-        setOpen(prev => !prev)
-    }
+        setOpen(prev => !prev);
+    };
 
     const handleLogout = () => {
-        localStorage.removeItem('user')
-        delete axios.defaults.headers.common['Authorization']
-        setUser(null)
-        setOpen(false)
-    }
+        // Usuwamy usera z kontekstu i localStorage, czyścimy nagłówek axiosa
+        logout();
+        setOpen(false);
+    };
 
     return (
         <div className="user-menu">
@@ -31,7 +33,7 @@ export default function UserMenu({ user, setUser }) {
                 <div className="user-dropdown">
                     {user ? (
                         <>
-                            <p>Jesteś zalogowany!</p>
+                            <p>Jesteś zalogowany jako <strong>{user.username}</strong></p>
                             <button onClick={handleLogout}>Wyloguj</button>
                         </>
                     ) : (
@@ -47,5 +49,5 @@ export default function UserMenu({ user, setUser }) {
                 </div>
             )}
         </div>
-    )
+    );
 }

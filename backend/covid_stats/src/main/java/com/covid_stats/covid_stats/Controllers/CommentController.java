@@ -5,6 +5,7 @@ import com.covid_stats.covid_stats.Services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,6 @@ public class CommentController {
      *    - content: lista Comment
      *    - totalPages, totalElements, size, number, itp.
      */
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/roots")
     public ResponseEntity<Page<Comment>> getRootComments(
             @RequestParam(defaultValue = "0") int page,
@@ -42,7 +42,7 @@ public class CommentController {
     }
 
     /**
-     * 2) Dodaj nowy komentarz główny.
+     * 2) Dodaj nowy komentarz główny (wymaga uwierzytelnienia).
      *    Przykład żądania JSON:
      *    {
      *      "userId": 5,
@@ -55,15 +55,8 @@ public class CommentController {
         return ResponseEntity.ok(created);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        commentService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-
     /**
-     * 3) Dodaj odpowiedź do istniejącego komentarza.
+     * 3) Dodaj odpowiedź do istniejącego komentarza (wymaga uwierzytelnienia).
      *    Endpoint: /api/comments/reply/{parentId}
      *    Przykład żądania JSON:
      *    {
@@ -81,13 +74,18 @@ public class CommentController {
     }
 
     /**
-     * 4) Pobierz paginowane odpowiedzi do komentarza o danym ID.
-     *    Parametry:
-     *      - page (opcjonalne, domyślnie 0)
-     *      - size (opcjonalne, domyślnie 10)
-     *    Endpoint: /api/comments/{parentId}/replies
+     * 4) Usuwanie komentarza – dostępne tylko dla ADMIN lub autora komentarza.
      */
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+        commentService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 5) Pobierz paginowane odpowiedzi do komentarza o danym ID (publiczne GET).
+     */
     @GetMapping("/{parentId}/replies")
     public ResponseEntity<Page<Comment>> getRepliesPaged(
             @PathVariable Long parentId,
@@ -98,8 +96,7 @@ public class CommentController {
         return ResponseEntity.ok(repliesPage);
     }
 
-    // (opcjonalne) jeśli gdzieś jeszcze chcemy dostać wszystkie odpowiedzi w jednej liście
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
+    // (opcjonalne) jeśli gdzieś jeszcze chcemy dostać wszystkie odpowiedzi w jednej liście (publiczne GET)
     @GetMapping("/{parentId}/replies/all")
     public ResponseEntity<List<Comment>> getAllReplies(@PathVariable Long parentId) {
         List<Comment> replies = commentService.getRepliesNoPage(parentId);
@@ -119,4 +116,3 @@ class AddCommentRequest {
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 }
-

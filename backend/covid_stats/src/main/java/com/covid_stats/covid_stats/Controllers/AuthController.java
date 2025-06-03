@@ -37,5 +37,4 @@ public class AuthController {
             return ResponseEntity.status(404).body("Użytkownik nie istnieje");
         }
     }
-
 }

@@ -1,9 +1,12 @@
-import { useState } from 'react';
+// src/views/LoginForm.jsx
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../LoginForm.css'; // Import stylów dla panelu
+import { AuthContext } from '../context/AuthContext';
+import '../LoginForm.css'; // jeśli masz własne style
 
-export default function LoginForm({ setUser }) {
+export default function LoginForm() {
+    const { setUser, setAuthHeader } = useContext(AuthContext);
     const [credentials, setCredentials] = useState({
         username: '',
         password: '',
@@ -22,21 +25,30 @@ export default function LoginForm({ setUser }) {
         setError(null);
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:8080/auth/login', {
-                username: credentials.username,
-                password: credentials.password,
-            });
+            // Tworzymy nagłówek Basic
+            const basicHeader = 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
+            const response = await axios.post(
+                'http://localhost:8080/auth/login',
+                {
+                    username: credentials.username,
+                    password: credentials.password,
+                },
+                {
+                    headers: {
+                        Authorization: basicHeader
+                    }
+                }
+            );
 
-            const userData = res.data;
-            // userData musi zawierać przynajmniej { id, username, token }
-            localStorage.setItem('user', JSON.stringify(userData));
-            axios.defaults.headers.common[
-                'Authorization'
-                ] = `Bearer ${userData.token}`;
+            const userData = response.data; // backend zwraca { id, username, role }
+            // Zapisujemy usera i nagłówek w konteście i localStorage
             setUser(userData);
+            setAuthHeader(basicHeader);
 
-            console.log('Zalogowano:', userData);
-            navigate('/'); // przekierowanie homepage
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('basicCreds', basicHeader);
+
+            navigate('/');
         } catch (err) {
             console.error(err);
             setError('Nieprawidłowy login lub hasło');

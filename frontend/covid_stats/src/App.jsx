@@ -1,62 +1,39 @@
 // src/App.jsx
-
-import './App.css'
+import './App.css';
 import {
     BrowserRouter as Router,
     Routes,
     Route,
-    useLocation
-} from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-
-import HomePage from './views/HomePage.jsx'
-import LoginForm from './views/LoginForm.jsx'
-import RegisterForm from './views/RegisterForm.jsx'
-import UserMenu from './components/UserMenu.jsx'
-import Footer from "./components/Footer.jsx";
+} from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import HomePage from './views/HomePage.jsx';
+import LoginForm from './views/LoginForm.jsx';
+import RegisterForm from './views/RegisterForm.jsx';
+import UserMenu from './components/UserMenu.jsx';
+import Footer from './components/Footer.jsx';
 
 function AppContent() {
-    const [user, setUser] = useState(null);
-    const location = useLocation();
-
-    useEffect(() => {
-        const stored = localStorage.getItem('user');
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            axios.defaults.headers.common[
-                'Authorization'
-                ] = `Bearer ${parsed.token}`;
-            setUser(parsed);
-        }
-    }, []);
-
     return (
         <>
-            {/* Pokaż menu użytkownika, jeśli nie jest ekran logowania/rejestracji */}
-            {location.pathname !== '/auth/login' &&
-                location.pathname !== '/register' && (
-                    <UserMenu user={user} setUser={setUser} />
-                )}
+            <UserMenu />
 
             <Routes>
-                <Route path="/" element={<HomePage user={user} />} />
-                <Route
-                    path="/auth/login"
-                    element={<LoginForm setUser={setUser} />}
-                />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/auth/login" element={<LoginForm />} />
                 <Route path="/register" element={<RegisterForm />} />
             </Routes>
-            <Footer></Footer>
+
+            <Footer />
         </>
     );
 }
 
 export default function App() {
     return (
-        // Tutaj, żeby AppContent miał dostęp do useLocation()
-        <Router>
-            <AppContent />
-        </Router>
+        <AuthProvider>
+            <Router>
+                <AppContent />
+            </Router>
+        </AuthProvider>
     );
 }

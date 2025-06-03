@@ -1,17 +1,24 @@
 // src/components/CommentItem.jsx
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from '@heroicons/react/outline';
 import RepliesList from './RepliesList';
-import { postReply } from '../api/comments';
-import axios from 'axios';
+import { postReply, deleteCommentById } from '../api/comments';
+import { AuthContext } from '../context/AuthContext';
 
-const CommentItem = ({ comment, user, onDeleted }) => {
+const CommentItem = ({ comment, onDeleted }) => {
+    const { user } = useContext(AuthContext);
     const [showReplies, setShowReplies] = useState(false);
     const [showReplyBox, setShowReplyBox] = useState(false);
     const [replyContent, setReplyContent] = useState('');
     const [refreshReplies, setRefreshReplies] = useState(false);
     const [deleting, setDeleting] = useState(false);
-    const [replyCount, setReplyCount] = useState(comment.replies.length);
+    const [replyCount, setReplyCount] = useState(comment.replies?.length || 0);
+
+    const authorName = comment.author?.username || 'Anonim';
+
+    // Czy zalogowany może usunąć ten komentarz?
+    const canDeleteComment =
+        user?.role === 'ROLE_ADMIN' || user?.id === comment.author?.id;
 
     const handleToggleReplies = () => {
         setShowReplies((prev) => !prev);
@@ -34,7 +41,7 @@ const CommentItem = ({ comment, user, onDeleted }) => {
             setRefreshReplies((r) => !r);
             setShowReplies(true);
             setShowReplyBox(false);
-            setReplyCount((prev) => prev + 1); // zwiększamy licznik odpowiedzi
+            setReplyCount((prev) => prev + 1);
         } catch (err) {
             console.error('Błąd dodawania odpowiedzi:', err);
         }
@@ -44,21 +51,15 @@ const CommentItem = ({ comment, user, onDeleted }) => {
         if (!window.confirm('Na pewno chcesz usunąć ten komentarz?')) return;
         setDeleting(true);
         try {
-            await axios.delete(`http://localhost:8080/api/comments/${comment.id}`);
+            await deleteCommentById(comment.id);
             onDeleted();
         } catch (err) {
             console.error('Błąd podczas usuwania komentarza:', err);
-            alert('Nie udało się usunąć komentarza. Sprawdź konsolę.');
+            alert('Nie udało się usunąć komentarza.');
         } finally {
             setDeleting(false);
         }
     };
-
-    const authorName = comment.author?.username || 'Anonim';
-
-    // Czy zalogowany może usunąć root-komentarz?
-    const canDeleteComment =
-        user?.role === 'ROLE_ADMIN' || user?.id === comment.author?.id;
 
     return (
         <div className="comment-item">
@@ -79,6 +80,7 @@ const CommentItem = ({ comment, user, onDeleted }) => {
                     onClick={handleToggleReplyBox}
                     className="btn-reply-action"
                     type="button"
+                    disabled={!user}
                 >
                     Odpowiedz
                 </button>
@@ -120,10 +122,11 @@ const CommentItem = ({ comment, user, onDeleted }) => {
                     <input
                         type="text"
                         className="reply-input-inline"
-                        maxLength={500} /* limit 500 znaków */
+                        maxLength={500}
                         placeholder="Twoja odpowiedź..."
                         value={replyContent}
                         onChange={(e) => setReplyContent(e.target.value)}
+                        disabled={!user}
                     />
                     <button
                         type="submit"
@@ -140,7 +143,6 @@ const CommentItem = ({ comment, user, onDeleted }) => {
                 <div className="replies-container">
                     <RepliesList
                         parentId={comment.id}
-                        user={user}
                         key={refreshReplies.toString()}
                     />
                 </div>

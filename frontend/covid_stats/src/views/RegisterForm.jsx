@@ -1,3 +1,4 @@
+// src/views/RegisterForm.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -34,11 +35,11 @@ export default function RegisterForm() {
 
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:8080/users', {
+            await axios.post('http://localhost:8080/users', {
                 username: form.username,
                 password: form.password,
             });
-            console.log('Zarejestrowano:', res.data);
+            console.log('Zarejestrowano:', form.username);
             setSuccess(true);
             setForm({ username: '', password: '', confirmPassword: '' });
         } catch (err) {

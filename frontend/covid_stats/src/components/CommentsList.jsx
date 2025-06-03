@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+// src/components/CommentsList.jsx
+import React, { useEffect, useState, useContext } from 'react';
 import { fetchRootComments, postRootComment } from '../api/comments';
 import CommentItem from './CommentItem';
+import { AuthContext } from '../context/AuthContext';
 
-const CommentsList = ({ user }) => {
+const CommentsList = () => {
+    const { user } = useContext(AuthContext);
     const [commentsPage, setCommentsPage] = useState({
         content: [],
         totalPages: 0,
@@ -58,7 +61,7 @@ const CommentsList = ({ user }) => {
             loadComments(0);
         } catch (err) {
             console.error('Błąd podczas dodawania komentarza:', err.response || err);
-            setErrorAdding('Nie udało się dodać komentarza. Sprawdź konsolę.');
+            setErrorAdding('Nie udało się dodać komentarza.');
         }
     };
 
@@ -67,21 +70,22 @@ const CommentsList = ({ user }) => {
             <h2 className="comments-header">Komentarze</h2>
 
             <form onSubmit={handleAddComment} className="new-comment-form">
-        <textarea
-            rows={3}
-            placeholder="Dodaj nowy komentarz..."
-            value={newContent}
-            maxLength={500}
-            onChange={(e) => setNewContent(e.target.value)}
-        />
+                <textarea
+                    rows={3}
+                    placeholder="Dodaj nowy komentarz..."
+                    value={newContent}
+                    maxLength={500}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    disabled={!user}
+                />
                 <div>
                     <button
                         type="submit"
                         className="btn-submit"
-                        disabled={!user}
+                        disabled={!user || !newContent.trim()}
                         style={{ marginBottom: '10px' }}
                     >
-                        {user ? "Dodaj komentarz" : "Musisz być zalogowany, żeby dodać komentarz"}
+                        {user ? 'Dodaj komentarz' : 'Musisz być zalogowany, żeby dodać komentarz'}
                     </button>
                     {errorAdding && (
                         <p className="error-message">{errorAdding}</p>
@@ -100,7 +104,6 @@ const CommentsList = ({ user }) => {
                             <CommentItem
                                 key={comment.id}
                                 comment={comment}
-                                user={user}
                                 onDeleted={() => loadComments(currentPage)}
                             />
                         ))
@@ -111,8 +114,8 @@ const CommentsList = ({ user }) => {
                             Poprzednia
                         </button>
                         <span className="page-info">
-              Strona {currentPage + 1} z {commentsPage.totalPages}
-            </span>
+                            Strona {currentPage + 1} z {commentsPage.totalPages}
+                        </span>
                         <button
                             onClick={handleNext}
                             disabled={currentPage === commentsPage.totalPages - 1}

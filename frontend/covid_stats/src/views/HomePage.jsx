@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import ECommerceChart from '../components/ECommerceChart.jsx';
 import FilteredTypesChart from '../components/FilteredTypesChart.jsx';
-import UserMenu from '../components/UserMenu.jsx';
 import GastronomyRevenueChart from '../components/GastronomyRevenueChart.jsx';
 import CommentsList from '../components/CommentsList.jsx';
+import { AuthContext } from '../context/AuthContext';
 import '../comments.css';
 
-
-export default function HomePage({ user }) {
+export default function HomePage() {
+    const { user } = useContext(AuthContext);
     return (
         <div>
             <h1>Wpływ pandemii COVID-19 na gastronomię w Europie</h1>

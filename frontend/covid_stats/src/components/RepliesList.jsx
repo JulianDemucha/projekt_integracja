@@ -1,13 +1,14 @@
 // src/components/RepliesList.jsx
-import React, { useEffect, useState } from 'react';
-import { fetchReplies } from '../api/comments';
-import axios from 'axios';
+import React, { useEffect, useState, useContext } from 'react';
+import { fetchReplies, deleteCommentById } from '../api/comments';
+import { AuthContext } from '../context/AuthContext';
 
-const RepliesList = ({ parentId, user }) => {
+const RepliesList = ({ parentId }) => {
+    const { user } = useContext(AuthContext);
     const [repliesPage, setRepliesPage] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [deletingId, setDeletingId] = useState(null); // ID odpowiedzi w trakcie usuwania
+    const [deletingId, setDeletingId] = useState(null);
 
     const loadReplies = async (page) => {
         setLoading(true);
@@ -30,11 +31,11 @@ const RepliesList = ({ parentId, user }) => {
         if (!window.confirm('Na pewno chcesz usunąć tę odpowiedź?')) return;
         setDeletingId(replyId);
         try {
-            await axios.delete(`http://localhost:8080/api/comments/${replyId}`);
+            await deleteCommentById(replyId);
             loadReplies(currentPage);
         } catch (err) {
             console.error('Błąd podczas usuwania odpowiedzi:', err);
-            alert('Nie udało się usunąć odpowiedzi. Sprawdź konsolę.');
+            alert('Nie udało się usunąć odpowiedzi.');
             setDeletingId(null);
         }
     };
