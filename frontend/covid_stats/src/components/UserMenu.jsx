@@ -1,7 +1,5 @@
-// src/components/UserMenu.jsx
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import '../UserMenu.css';
 import { AuthContext } from '../context/AuthContext';
 
@@ -14,7 +12,7 @@ export default function UserMenu() {
     };
 
     const handleLogout = () => {
-        // Usuwamy usera z kontekstu i localStorage, czyścimy nagłówek axiosa
+        // usuniecie usera z kontekstu i localStorage, czyszczenie naglowka axiosa
         logout();
         setOpen(false);
     };

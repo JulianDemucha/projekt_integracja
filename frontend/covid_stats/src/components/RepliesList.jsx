@@ -1,4 +1,3 @@
-// src/components/RepliesList.jsx
 import React, { useEffect, useState, useContext } from 'react';
 import { fetchReplies, deleteCommentById } from '../api/comments';
 import { AuthContext } from '../context/AuthContext';

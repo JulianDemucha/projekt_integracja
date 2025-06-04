@@ -1,4 +1,3 @@
-// src/components/CommentItem.jsx
 import React, { useState, useContext } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from '@heroicons/react/outline';
 import RepliesList from './RepliesList';
