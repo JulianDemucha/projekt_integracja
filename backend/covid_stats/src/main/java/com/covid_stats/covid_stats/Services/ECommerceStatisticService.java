@@ -17,11 +17,6 @@ import org.springframework.stereotype.Component;
 public class ECommerceStatisticService {
     private final List<ECommerceEnterprisesPercent> stats = new ArrayList<>();
 
-    /* (x) szczerze tu jest pierdu pierdu wczytywanie danych z data.csv i wpierdalanie tego w obiekt
-    klasy ECommerceEnterprisesPercent ktory sie pozniej wpierdala wjsona i wpierdala w resta i wpierdala
-    do frontu i wpierdala na wykres i pozdro ale to raczej nie jest wazne bo algorytmike my juz mieli
-     */
-
     @PostConstruct
     public void load() {
         Pattern pattern = Pattern.compile("ent;(.*?);;");
@@ -61,7 +56,3 @@ public class ECommerceStatisticService {
                 .toList();
     }
 }
-
-/* (x) dobra to pomijam gastronomyfacilities i gastronomyrevenue jak i ich dto i lecim do securityconfig
- -> ../config/SecurityConfig
- */

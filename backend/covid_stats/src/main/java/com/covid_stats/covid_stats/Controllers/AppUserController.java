@@ -15,9 +15,6 @@ import java.util.List;
 @RequestMapping("/users")
 public class AppUserController {
 
-    //(x) no to controllery masz glownie do endpointow to wlasnie rest jest
-    // (x) nie chce mi sie pisac znowu na koncu pliku gdzie masz isc to se ogarnij controllery po prostu i g
-
     private final AppUserRepo repo;
 
     private final PasswordEncoder encoder;

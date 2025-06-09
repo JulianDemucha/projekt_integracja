@@ -21,21 +21,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByParentIsNullOrderByCreatedAtDesc();
     List<Comment> findByParentIdOrderByCreatedAtAsc(Long parentId);
 
-    /* (x)
-    dobra to tu tak samo repo jest jak i z tym userem ale pod tym sie cos dziwnego dzieje kurde blaszka co to
-    za listy japierdole
 
-    bez lypy to sa te Page i to ulatwia prace na stronach komentarzy bo tak se zrobilem i pzdr
-    to page ci robi ze tam dajesz np ze w jednej stronie masz 10 komentarzy (jak w naszym przypadku)
-    i kazda instancja tego page ma informacje o tym ile ogolnie jest stron wszystkich, jaki jest numer
-    tej konkretnej strony i inne pierdoly. ogolnie niby rownie dobrze mozna by bylo se zrobic swoja klase
-    page ktora by jakos to ogarniala ale po co jak JPA ma takie cacko
-
-    a to jak dziala to np findByParentIsNullOrderByCreatedAtDesc i gdzie jest deklaracja bebechow tej metody
-    to ostatnio ci wspominalem ze skurwysynstwo dziala tak ze se z nazwy kmini jak ma dzialac
-
-    dobra pierdu pierdu to latwe to spierdalaj do CommentService
-
-    -> ../Services/CommentService
-     */
 }
