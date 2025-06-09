@@ -23,14 +23,7 @@ public class CommentController {
     }
 
     /**
-     * 1) Pobierz wszystkie główne komentarze (bez nadrzędnego komentarza), strona po 10 (domyślnie).
-     *    Parametry:
-     *      - page (opcjonalne, domyślnie 0)
-     *      - size (opcjonalne, domyślnie 10)
-     *
-     *  Odpowiedź: Page<Comment> w JSON, zawiera:
-     *    - content: lista Comment
-     *    - totalPages, totalElements, size, number, itp.
+     * pobiera wszystkie spaginowane komentarze (po 10 na strone) glowne
      */
     @GetMapping("/roots")
     public ResponseEntity<Page<Comment>> getRootComments(
@@ -41,29 +34,14 @@ public class CommentController {
         return ResponseEntity.ok(rootsPage);
     }
 
-    /**
-     * 2) Dodaj nowy komentarz główny (wymaga uwierzytelnienia).
-     *    Przykład żądania JSON:
-     *    {
-     *      "userId": 5,
-     *      "content": "To jest nowy komentarz."
-     *    }
-     */
+    // dodanie nowego komentarza (authentication() w securiticonfig)
     @PostMapping("/add")
     public ResponseEntity<Comment> addRootComment(@RequestBody AddCommentRequest request) {
         Comment created = commentService.addRootComment(request.getContent(), request.getUserId());
         return ResponseEntity.ok(created);
     }
 
-    /**
-     * 3) Dodaj odpowiedź do istniejącego komentarza (wymaga uwierzytelnienia).
-     *    Endpoint: /api/comments/reply/{parentId}
-     *    Przykład żądania JSON:
-     *    {
-     *      "userId": 7,
-     *      "content": "To jest odpowiedź na komentarz o ID 3."
-     *    }
-     */
+    // dodanie reply (authentication() w securityconfig)
     @PostMapping("/reply/{parentId}")
     public ResponseEntity<Comment> addReply(
             @PathVariable Long parentId,
@@ -74,7 +52,7 @@ public class CommentController {
     }
 
     /**
-     * 4) Usuwanie komentarza – dostępne tylko dla ADMIN lub autora komentarza.
+     *     Usuwanie komentarza – dostępne tylko dla ADMIN lub autora komentarza.
      */
     @PreAuthorize("hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)")
     @DeleteMapping("/{id}")
@@ -84,7 +62,7 @@ public class CommentController {
     }
 
     /**
-     * 5) Pobierz paginowane odpowiedzi do komentarza o danym ID (publiczne GET).
+     *     pobranie paginowanych odpowiedzi do komentarza o danym ID
      */
     @GetMapping("/{parentId}/replies")
     public ResponseEntity<Page<Comment>> getRepliesPaged(
@@ -96,7 +74,7 @@ public class CommentController {
         return ResponseEntity.ok(repliesPage);
     }
 
-    // (opcjonalne) jeśli gdzieś jeszcze chcemy dostać wszystkie odpowiedzi w jednej liście (publiczne GET)
+    // wszystkie odpowiedzi w jednej liście (publiczne GET)
     @GetMapping("/{parentId}/replies/all")
     public ResponseEntity<List<Comment>> getAllReplies(@PathVariable Long parentId) {
         List<Comment> replies = commentService.getRepliesNoPage(parentId);
@@ -104,9 +82,7 @@ public class CommentController {
     }
 }
 
-/**
- * Prosty DTO do odbioru danych przy dodawaniu komentarza.
- */
+// DTO do odbioru danych z komentarza
 class AddCommentRequest {
     private Long userId;
     private String content;

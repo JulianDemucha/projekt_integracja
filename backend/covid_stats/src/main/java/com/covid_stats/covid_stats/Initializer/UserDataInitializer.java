@@ -7,6 +7,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+    /*
+      ! tworzy roota jezeli jeszcze go nie ma !
+      cala klasa zamiast @EvventListener w configu, bo nie ma
+      configu ogolnego tylko nazwany stricte "Security Config"
+     */
+
 @Component
 public class UserDataInitializer implements ApplicationListener<ContextRefreshedEvent> {
     private final AppUserRepo repo;
@@ -22,10 +28,11 @@ public class UserDataInitializer implements ApplicationListener<ContextRefreshed
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (initialized) return;
-        if (repo.findByUsername("user").isEmpty()) {
+        if (repo.findByUsername("root").isEmpty()) {
             AppUser u = new AppUser();
-            u.setUsername("user");
-            u.setPassword(encoder.encode("password"));
+            u.setUsername("root");
+            u.setPassword(encoder.encode("root"));
+            u.setRole("ROLE_ADMIN");
             repo.save(u);
         }
         initialized = true;

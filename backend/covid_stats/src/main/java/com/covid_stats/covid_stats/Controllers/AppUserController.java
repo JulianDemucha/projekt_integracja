@@ -15,15 +15,19 @@ import java.util.List;
 @RequestMapping("/users")
 public class AppUserController {
 
-    @Autowired
-    private AppUserRepo repo;
+    //(x) no to controllery masz glownie do endpointow to wlasnie rest jest
+    // (x) nie chce mi sie pisac znowu na koncu pliku gdzie masz isc to se ogarnij controllery po prostu i g
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private final AppUserRepo repo;
 
-    /**
-     * 1) Rejestracja nowego użytkownika – dostępne publicznie.
-     */
+    private final PasswordEncoder encoder;
+
+    public AppUserController(AppUserRepo repo, PasswordEncoder encoder) {
+        this.repo = repo;
+        this.encoder = encoder;
+    }
+
+    //rejestracja
     @PostMapping
     public AppUser createUser(@RequestBody AppUser user) {
         user.setPassword(encoder.encode(user.getPassword()));
@@ -31,18 +35,14 @@ public class AppUserController {
         return repo.save(user);
     }
 
-    /**
-     * 2) Pobierz wszystkich użytkowników – tylko ADMIN.
-     */
+    //get na wszystkich uzytkownikow
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<AppUser> listUsers() {
         return repo.findAll();
     }
 
-    /**
-     * 3) Edytuj lub utwórz użytkownika o danym ID – tylko ADMIN.
-     */
+    // edycja/create uzytkownika
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public AppUser upsertUser(

@@ -22,11 +22,21 @@ import java.util.List;
 @EnableMethodSecurity  // @PreAuthorize itp.
 public class SecurityConfig {
 
+    // (x) to takie gowno do hashowania hasel ze springsecurity
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /* (x) no to tu duzo jest jakiegos pierdu pierdu i rozprawke na temat kazdego by trzeba bylo pisac
+    a sam czesci niezbyt ogarniam wiec no pomine kapke.
+
+    ogolnie w tym filterchainie se dajesz jakies konfiguracje, permity na dostep do konkretnych endpointow
+    (na endpointach masz jsony z danymi lub "wejscia" do danych na ktore sie wysyla tez dane zeby je odebrac
+    i to wszystko kmini rest)
+
+    a to authenticated masz w AuthControllerze
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -43,14 +53,14 @@ public class SecurityConfig {
 
                         /* POST do rejestracji (niestety nie ma zadnej capathy ani weryfikacji maila,
                         ale moze ktos nie z ddosuje) */
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
 
                         // GET,PUT na users dla adm w razie co
                         .requestMatchers("/users/**").hasRole("ADMIN")
 
                         // POST na komentarze (tworzenie dla zalogowanych)
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
-                        // DELETE na komentarze (niby dla zalogowanych ale w kontrolerze jest preauthorize
+                        // DELETE na komentarze (niby dla zalogowanych ale w kontrolerze jest preauthorize)
                         // "hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)"
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
 
@@ -62,7 +72,19 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /* (x) cors to takie gowno co ci chroni zeby ktos nie zapierdolil danych w pizdu jakichs fajnych
+    albo nie wpierdalal miliona danych tak o bo moze cn
 
+    no chroni endpointy po prostu
+
+    a tam nizej se zezwalamy dla fronta na wszystko bo jest sigmastyczny (nie ogarniam i tak czasami jak to dziala
+    bo i tak musze permittowac dziwke)
+
+    nie no ogolnie ten filterchain dziala do wszystkiego a ten cors jest jakby do innych witryn js czyli np
+    jak w filterchainie masz spermittowane cos, ale w tym corsie obejmujesz ten endpoint corsem ale tez
+    masz spermittowanego naszego localhosta na portcie 5173 wiec jak javascript z tej naszej strony wysle
+    requesta do servera to go wpusci ale np jak se w przegladarce wpiszesz dany endpoint to cie nie wpusci cn
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
@@ -84,3 +106,5 @@ public class SecurityConfig {
         return source;
     }
 }
+
+// (x) -> ../Controllers/appUserController

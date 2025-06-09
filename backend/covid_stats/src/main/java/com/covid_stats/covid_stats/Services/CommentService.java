@@ -16,10 +16,14 @@ import java.util.List;
 
 @Service
 public class CommentService {
+    //(x) alo dzien dobry te service to sa po to co widac nizej czyli faktyczne uzywanie repozytoriow
+
 
     private final CommentRepository commentRepository;
+
     private final AppUserRepo userRepository;
 
+    //(x) tu bez autowired i tak by skurwysyn springowski wstrzyknal te instancje repo ale lepiej se oznaczyc tak o chyba
     @Autowired
     public CommentService(CommentRepository commentRepository,
                           AppUserRepo userRepository) {
@@ -28,7 +32,18 @@ public class CommentService {
     }
 
     // tworzy nowy komentarz (główny, parent = null)
-    @Transactional
+    @Transactional /* (x) kurwa tu to ciezka sprawa wytlumaczyc bez zrozumienia entitymanagera,
+    ktorego mielismy na zajeciach ale teoretycznie rozumienie go nie jest potrzebne do ogarniecia springboota
+    na zajeciach mielismy czystego springa nie springoota i tam wszystkie te operacje na bazach byly robione
+    za pomoca niego a tu to wszystko sie dzieje w tle bo springboot jest sigmastyczny.
+    w kazdym badz razie tam se cos kminisz kminisz a na koncu zeby scommitowac te zmiany to wlasnie na koncu jebiesz
+    commita. no to to transactional to robi ze masz jedna transakcje na cala metode czyli normalnie pod sam koniec ci
+    commita robi. ogolnie to tu masz save na koncu wiec w sumie totalnie nic nie zmienia ale clean code wiec w razie co
+    gdyby cos zmieniac w tej metodzie to warto miec XDD to sie bardziej przydaje jak operujesz na kilku repo w jednej
+    metodzie albo cos kminisz ze masz wiele zapisow, ogolnie sam jakos bardzo tego jeszcze nie ogaritka
+
+    ! a ta metoda sluzy do tworzenia wylacznie glownych komentarzy !
+    */
     public Comment addRootComment(String content, Long userId) {
         AppUser user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
@@ -41,7 +56,6 @@ public class CommentService {
 
     @Transactional
     public void deleteById(Long id) {
-        // tutaj można dodać dodatkową weryfikację np. czy komentarz istnieje
         commentRepository.deleteById(id);
     }
 
@@ -61,7 +75,7 @@ public class CommentService {
         return commentRepository.save(reply);
     }
 
-    // pobiera wszystkie „główne” komentarze (tych bez parent), stronicowanie po 10
+    // pobiera wszystkie „glowne, root” komentarze (tych bez parent), stronicowanie po 10
     @Transactional(readOnly = true)
     public Page<Comment> getRootComments(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
@@ -75,14 +89,11 @@ public class CommentService {
         return commentRepository.findByParentIdOrderByCreatedAtAsc(parentId, pageable);
     }
 
-    // (opcjonalnie) istniejące metody bez paginacji, jeśli gdzieś jeszcze będą potrzebne
-    @Transactional(readOnly = true)
-    public List<Comment> getAllRootComments() {
-        return commentRepository.findByParentIsNullOrderByCreatedAtDesc();
-    }
-
+    // zwraca wszystkie podkomentarze bez paginacji
     @Transactional(readOnly = true)
     public List<Comment> getRepliesNoPage(Long parentId) {
         return commentRepository.findByParentIdOrderByCreatedAtAsc(parentId);
     }
 }
+
+// (x) -> DatabaseUserDetailsService
