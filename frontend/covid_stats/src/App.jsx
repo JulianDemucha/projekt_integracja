@@ -4,7 +4,7 @@ import {
     Routes,
     Route,
 } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import {AuthProvider} from './context/AuthContext';
 import HomePage from './views/HomePage.jsx';
 import LoginForm from './views/LoginForm.jsx';
 import RegisterForm from './views/RegisterForm.jsx';
@@ -14,15 +14,15 @@ import Footer from './components/Footer.jsx';
 function AppContent() {
     return (
         <>
-            <UserMenu />
+            <UserMenu/>
 
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/auth/login" element={<LoginForm />} />
-                <Route path="/register" element={<RegisterForm />} />
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/auth/login" element={<LoginForm/>}/>
+                <Route path="/register" element={<RegisterForm/>}/>
             </Routes>
 
-            <Footer />
+            <Footer/>
         </>
     );
 }
@@ -31,7 +31,7 @@ export default function App() {
     return (
         <AuthProvider>
             <Router>
-                <AppContent />
+                <AppContent/>
             </Router>
         </AuthProvider>
     );

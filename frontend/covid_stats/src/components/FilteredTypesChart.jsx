@@ -11,6 +11,7 @@ import {
     Tooltip,
     Legend,
 } from 'recharts'
+import {DownloadButtonFiltered} from '../components/DownloadButtonFiltered.jsx'
 import '../FilteredTypesChart.css'
 
 export default function FilteredTypesChart() {
@@ -20,7 +21,6 @@ export default function FilteredTypesChart() {
     const [selectedRange, setSelectedRange] = useState([0, 0])
     const [selectedTypes, setSelectedTypes] = useState({})
 
-    // token w localstorage
     const loggedIn = !!localStorage.getItem('user')
 
     useEffect(() => {
@@ -28,7 +28,6 @@ export default function FilteredTypesChart() {
             .get('http://localhost:8080/api/stats3')
             .then((resp) => {
                 const data = resp.data
-
                 const allTypes = Array.from(new Set(data.map((d) => d.type)))
                 setTypes(allTypes)
 
@@ -69,13 +68,11 @@ export default function FilteredTypesChart() {
     }
 
     const handleMinYearChange = (e) => {
-        const newMin = Number(e.target.value),
-            currMax = selectedRange[1]
+        const newMin = Number(e.target.value), currMax = selectedRange[1]
         setSelectedRange([newMin > currMax ? currMax : newMin, currMax])
     }
     const handleMaxYearChange = (e) => {
-        const newMax = Number(e.target.value),
-            currMin = selectedRange[0]
+        const newMax = Number(e.target.value), currMin = selectedRange[0]
         setSelectedRange([currMin, newMax < currMin ? currMin : newMax])
     }
 
@@ -83,6 +80,15 @@ export default function FilteredTypesChart() {
     const filteredData = chartData.filter(
         (d) => d.year >= selMinYear && d.year <= selMaxYear
     )
+
+    // Build export URL with query params
+    const queryParams = new URLSearchParams()
+    queryParams.set('minYear', selMinYear)
+    queryParams.set('maxYear', selMaxYear)
+    Object.entries(selectedTypes).forEach(([type, isOn]) => {
+        if (isOn) queryParams.append('types', type)
+    })
+    const exportUrl = `http://localhost:8080/api/stats3/export?${queryParams.toString()}`
 
     const COLORS = {
         restauracje: '#8884d8',
@@ -93,7 +99,6 @@ export default function FilteredTypesChart() {
 
     return (
         <div className="filtered-chart-container">
-            {/* Sekcja wykresu */}
             <div className="chart-wrapper">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart
@@ -135,7 +140,7 @@ export default function FilteredTypesChart() {
                                     strokeWidth={2}
                                     dot={{ r: 3 }}
                                     activeDot={{ r: 6 }}
-                                    isAnimationActive={true}
+                                    isAnimationActive
                                     animationDuration={1200}
                                 />
                             ) : null
@@ -144,7 +149,6 @@ export default function FilteredTypesChart() {
                 </ResponsiveContainer>
             </div>
 
-            {/* Sekcja filtrów */}
             <div className="filters-container">
                 <div
                     className="filters-panel"
@@ -155,7 +159,6 @@ export default function FilteredTypesChart() {
                 >
                     <h3 className="filters-title">Filtry wykresu</h3>
 
-                    {/* Zakres lat */}
                     <div className="filter-section">
                         <label className="filter-label">Zakres lat:</label>
                         <div className="filter-range-wrapper">
@@ -188,7 +191,6 @@ export default function FilteredTypesChart() {
                         </div>
                     </div>
 
-                    {/* Checklist typów */}
                     <div className="filter-section">
                         <label className="filter-label">
                             Wybierz typ(y) obiektów gastronomicznych:
@@ -205,10 +207,21 @@ export default function FilteredTypesChart() {
                                 </label>
                             ))}
                         </div>
+                        <div style={{ marginBottom: -50, marginTop: 10 }}>
+                            <DownloadButtonFiltered
+                                baseUrl="http://localhost:8080/api/stats3/export"
+                                params={{
+                                    minYear: selMinYear,
+                                    maxYear: selMaxYear,
+                                    types: Object.keys(selectedTypes).filter(t => selectedTypes[t])
+                                }}
+                                filename="stats3_filtered.csv"
+                                label="Eksportuj wyfiltrowane dane"
+                            />
+                        </div>
                     </div>
                 </div>
 
-                {/* overlay jak ktos jest niezalogowany */}
                 {!loggedIn && (
                     <div className="filters-overlay">
                         <p className="overlay-text">
@@ -220,6 +233,8 @@ export default function FilteredTypesChart() {
                     </div>
                 )}
             </div>
+
+
         </div>
     )
 }

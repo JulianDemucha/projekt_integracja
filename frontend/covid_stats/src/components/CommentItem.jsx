@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { ChevronDownIcon, ChevronUpIcon, TrashIcon } from '@heroicons/react/outline';
+import React, {useState, useContext} from 'react';
+import {ChevronDownIcon, ChevronUpIcon, TrashIcon} from '@heroicons/react/outline';
 import RepliesList from './RepliesList';
-import { postReply, deleteCommentById } from '../api/comments';
-import { AuthContext } from '../context/AuthContext';
+import {postReply, deleteCommentById} from '../api/comments';
+import {AuthContext} from '../context/AuthContext';
 
-const CommentItem = ({ comment, onDeleted }) => {
-    const { user } = useContext(AuthContext);
+const CommentItem = ({comment, onDeleted}) => {
+    const {user} = useContext(AuthContext);
     const [showReplies, setShowReplies] = useState(false);
     const [showReplyBox, setShowReplyBox] = useState(false);
     const [replyContent, setReplyContent] = useState('');
@@ -91,12 +91,12 @@ const CommentItem = ({ comment, onDeleted }) => {
                 >
                     {showReplies ? (
                         <>
-                            <ChevronUpIcon className="inline-icon" />
+                            <ChevronUpIcon className="inline-icon"/>
                             Ukryj odpowiedzi ({replyCount})
                         </>
                     ) : (
                         <>
-                            <ChevronDownIcon className="inline-icon" />
+                            <ChevronDownIcon className="inline-icon"/>
                             Pokaż odpowiedzi ({replyCount})
                         </>
                     )}
@@ -110,7 +110,7 @@ const CommentItem = ({ comment, onDeleted }) => {
                         title="Usuń komentarz"
                         type="button"
                     >
-                        <TrashIcon className="inline-icon" />
+                        <TrashIcon className="inline-icon"/>
                     </button>
                 )}
             </div>

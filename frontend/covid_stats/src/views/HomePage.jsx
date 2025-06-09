@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import ECommerceChart from '../components/ECommerceChart.jsx';
 import FilteredTypesChart from '../components/FilteredTypesChart.jsx';
 import GastronomyRevenueChart from '../components/GastronomyRevenueChart.jsx';
 import CommentsList from '../components/CommentsList.jsx';
-import { AuthContext } from '../context/AuthContext';
+import {AuthContext} from '../context/AuthContext';
 import '../comments.css';
+import {DownloadButton} from "../components/DownloadButton.jsx";
+
 
 export default function HomePage() {
-    const { user } = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
     return (
         <div>
             <h1>Wpływ pandemii COVID-19 na gastronomię w Europie</h1>
-            <br />
-            <h3 style={{ color: 'rgba(170, 170, 170, 1)' }}>
+            <br/>
+            <h3 style={{color: 'rgba(170, 170, 170, 1)'}}>
                 Po wybuchu pandemii związanej z COVID-19 zostaliśmy zamknięci w domach
                 bez możliwości odwiedzenia naszych ulubionych barów i restauracji.
                 Wprowadzono surowe obostrzenia – lokale musiały zamknąć się już w marcu
@@ -22,7 +24,7 @@ export default function HomePage() {
                 wzrostem kosztów utrzymania lokalu przy jednoczesnym braku choćby
                 częściowych przychodów.
             </h3>
-            <br />
+            <br/>
             <h3
                 style={{
                     color: 'rgba(170, 170, 170, 1)',
@@ -37,7 +39,7 @@ export default function HomePage() {
                 także filtrowanie po latach i typach lokali.
             </h3>
 
-            <FilteredTypesChart />
+            <FilteredTypesChart/>
 
             <h3
                 style={{
@@ -69,7 +71,12 @@ export default function HomePage() {
                 organizacyjne, które spowalniały ten proces.
             </h3>
 
-            <ECommerceChart />
+            <ECommerceChart/>
+            <DownloadButton
+                url="http://localhost:8080/api/stats/export"
+                filename="stats.csv"
+                label="Pobierz % e-commerce (CSV)"
+            />
 
             <h3>
                 Aby uzupełnić obraz sytuacji, warto przyjrzeć się również temu, jak
@@ -80,12 +87,16 @@ export default function HomePage() {
                 ale także na ich kondycję finansową.
             </h3>
 
-            <GastronomyRevenueChart />
-
+            <GastronomyRevenueChart/>
+            <DownloadButton
+                url="http://localhost:8080/api/stats2/export"
+                filename="stats2.csv"
+                label="Pobierz przychody gastronomii (CSV)"
+            />
 
 
             <div className="max-w-2xl mx-auto">
-                <CommentsList user={user} />
+                <CommentsList user={user}/>
             </div>
 
         </div>

@@ -1,16 +1,14 @@
-/* comments.css */
-
-/* ==============================
+/*
    Box-sizing globalne dla komentarzy i odpowiedzi
-   ============================== */
+*/
 .comment-item,
 .reply-item {
     box-sizing: border-box;
 }
 
-/* ==============================
-   Kontener dla całej listy komentarzy
-   ============================== */
+/*
+   Kontener dla calej listy komentarzy
+*/
 .comments-container {
     max-width: 600px;
     width: 100%;
@@ -22,9 +20,9 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* ==============================
-   Nagłówek listy
-   ============================== */
+/*
+   Naglowek listy
+*/
 .comments-header {
     font-size: 1.3rem;
     font-weight: 700;
@@ -32,9 +30,9 @@
     color: #ffffff;
 }
 
-/* ==============================
+/*
    Przycisk „Dodaj komentarz” (widoczny, gdy formularz jest schowany)
-   ============================== */
+*/
 .btn-new-comment-toggle {
     background-color: #3b82f6;
     color: #ffffff;
@@ -58,9 +56,9 @@
     background-color: #2563eb;
 }
 
-/* ==============================
+/*
    Inline formularz dodawania komentarza
-   ============================== */
+*/
 .new-comment-form-inline {
     display: flex;
     flex-direction: column;
@@ -138,11 +136,11 @@
     margin: 0;
 }
 
-/* ==============================
+/*
    Root-komentarz – karta
-   ============================== */
+*/
 
-/* Usuń marginesy domyślne <p> wewnątrz .comment-item */
+
 .comment-item p {
     margin: 0;
 }
@@ -162,9 +160,9 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
-/* ==============================
-   Nagłówek root-komentarza (autor + data)
-   ============================== */
+/*
+   Naglowek root-komentarza (autor + data)
+*/
 .comment-header {
     width: 100%;
     display: flex;
@@ -186,29 +184,29 @@
     margin: 0;
 }
 
-/* ==============================
-   Treść root-komentarza
-   ============================== */
+/*
+   Tresc root-komentarza
+*/
 .comment-content {
     margin: 0 0 0.5rem 0;
     font-size: 0.9rem;
     color: #e0e0e0;
     white-space: pre-wrap;
-    max-width: 55ch;           /* ograniczenie szerokości do ~70 znaków */
-    word-wrap: break-word;     /* wymusza łamanie długich słów */
-    text-align: left;          /* wyrównanie tekstu do lewej */
+    max-width: 55ch;
+    word-wrap: break-word; /* wymusza lamanie dlugich slow */
+    text-align: left;
 }
 
-/* ==============================
-   Działania pod root-komentarzem: Odpowiedz | Pokaż odpowiedzi | Usuń
-   ============================== */
+/*
+   Dzialania pod root-komentarzem: Odpowiedz | Pokaz odpowiedzi | Usuń
+*/
 .comment-actions {
     display: flex;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
 }
 
-/* Przycisk Odpowiedz – kolor szary, wygląd przycisku */
+/* Przycisk Odpowiedz – kolor szary, wyglad przycisku */
 .btn-reply-action {
     background-color: transparent;
     color: #cccccc;
@@ -225,7 +223,7 @@
     border-color: #777777;
 }
 
-/* Przycisk Pokaż/Ukryj odpowiedzi (linkowy styl) */
+/* Przycisk Pokaz/Ukryj odpowiedzi (linkowy styl) */
 .btn-toggle-replies {
     background: transparent;
     border: none;
@@ -248,7 +246,7 @@
     height: 1rem;
 }
 
-/* Przycisk usuń root-komentarza (tylko dla admina lub autora) */
+/* Przycisk usun root-komentarza */
 .comment-delete-btn {
     background: transparent;
     border: none;
@@ -314,9 +312,9 @@
     background-color: #059669;
 }
 
-/* ==============================
-   Kontener odpowiedzi: jaśniejsze tło, wyrównanie do lewej
-   ============================== */
+/*
+   Kontener odpowiedzi
+*/
 .replies-container {
     width: 99%;
     margin-top: 0.5rem;
@@ -324,9 +322,9 @@
     border-left: 2px solid #444444;
 }
 
-/* ==============================
+/*
    Pojedyncza odpowiedź (reply-item)
-   ============================== */
+*/
 .reply-item {
     background-color: #2c2c2c;
     border-radius: 4px;
@@ -338,12 +336,12 @@
     align-items: flex-start;
 }
 
-/* Nagłówek odpowiedzi (autor + data + usuń) */
+/* Naglowek odpowiedzi (autor + data + usun) */
 .reply-header {
     width: 100%;
     display: flex;
-    justify-content: space-between;  /* autor po lewej, reszta po prawej */
-    align-items: flex-start;         /* wyrównanie elementów do góry */
+    justify-content: space-between; /* autor po lewej, reszta po prawej */
+    align-items: flex-start; /* wyrównanie elementów do góry */
     margin-bottom: 0.25rem;
 }
 
@@ -357,7 +355,7 @@
 .reply-meta {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;    /* data i przycisk wyrównane do prawej */
+    align-items: flex-end;
 }
 
 .reply-date {
@@ -366,14 +364,14 @@
     margin: 0;
 }
 
-/* Przycisk usuń odpowiedzi (tylko dla admina lub autora) */
+/* Przycisk usun odpowiedzi */
 .reply-delete-btn {
     background: transparent;
     border: none;
     color: #ff6666;
     cursor: pointer;
     transition: color 0.2s;
-    margin-top: 0.25rem;      /* trochę odstępu od daty */
+    margin-top: 0.25rem; /* trochę odstępu od daty */
     padding: 0;
 }
 
@@ -382,18 +380,18 @@
 }
 
 .reply-content {
-    max-width: 55ch;           /* ograniczenie do ~70 znaków */
+    max-width: 55ch;
     margin-top: 0.25rem;
     font-size: 0.85rem;
     color: #d0d0d0;
     white-space: pre-wrap;
-    word-wrap: break-word;     /* wymusza łamanie długich słów */
-    text-align: left;          /* wyrównanie tekstu do lewej */
+    word-wrap: break-word;
+    text-align: left;
 }
 
-/* ==============================
-   Paginacja (zarówno w głównej liście, jak i w odpowiedziach)
-   ============================== */
+/*
+   Paginacja (zarowno w glownej liscie, jak i w odpowiedziach)
+*/
 .pagination {
     display: flex;
     justify-content: space-between;

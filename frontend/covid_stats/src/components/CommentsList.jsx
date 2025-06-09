@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { fetchRootComments, postRootComment } from '../api/comments';
+import React, {useEffect, useState, useContext} from 'react';
+import {fetchRootComments, postRootComment} from '../api/comments';
 import CommentItem from './CommentItem';
-import { AuthContext } from '../context/AuthContext';
+import {AuthContext} from '../context/AuthContext';
 
 const CommentsList = () => {
-    const { user } = useContext(AuthContext);
+    const {user} = useContext(AuthContext);
     const [commentsPage, setCommentsPage] = useState({
         content: [],
         totalPages: 0,
@@ -23,7 +23,7 @@ const CommentsList = () => {
             setCurrentPage(data.number);
         } catch (err) {
             console.error('loadComments – nieoczekiwany błąd:', err);
-            setCommentsPage({ content: [], totalPages: 0, number: 0 });
+            setCommentsPage({content: [], totalPages: 0, number: 0});
             setCurrentPage(0);
         } finally {
             setLoading(false);
@@ -82,7 +82,7 @@ const CommentsList = () => {
                         type="submit"
                         className="btn-submit"
                         disabled={!user || !newContent.trim()}
-                        style={{ marginBottom: '10px' }}
+                        style={{marginBottom: '10px'}}
                     >
                         {user ? 'Dodaj komentarz' : 'Musisz być zalogowany, żeby dodać komentarz'}
                     </button>

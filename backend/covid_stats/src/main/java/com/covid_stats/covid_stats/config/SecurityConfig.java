@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity  // @PreAuthorize itp.
+@EnableMethodSecurity
 public class SecurityConfig {
 
     // (x) to takie gowno do hashowania hasel ze springsecurity
@@ -63,6 +63,10 @@ public class SecurityConfig {
                         // DELETE na komentarze (niby dla zalogowanych ale w kontrolerze jest preauthorize)
                         // "hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)"
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
+                        // GETY na export dla zalogowanych
+                        .requestMatchers(HttpMethod.GET, "/api/stats/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/stats2/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/stats3/**").authenticated()
 
                         // wszystkie pozostałe requesty – dla roli admin
                         .anyRequest().hasRole("ADMIN")
@@ -102,6 +106,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/api/**", config);
         source.registerCorsConfiguration("/auth/**", config);
         source.registerCorsConfiguration("/users/**", config);
+        source.registerCorsConfiguration("/stats3/export/**", config);
 
         return source;
     }

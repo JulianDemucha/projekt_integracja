@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState, useContext} from 'react';
+import {Link} from 'react-router-dom';
 import '../UserMenu.css';
-import { AuthContext } from '../context/AuthContext';
+import {AuthContext} from '../context/AuthContext';
 
 export default function UserMenu() {
     const [open, setOpen] = useState(false);
-    const { user, logout } = useContext(AuthContext);
+    const {user, logout} = useContext(AuthContext);
 
     const toggleMenu = () => {
         setOpen(prev => !prev);

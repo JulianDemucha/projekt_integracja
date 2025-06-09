@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.covid_stats</groupId>
 	<artifactId>covid_stats</artifactId>
@@ -69,7 +69,6 @@
 			<version>0.11.5</version>
 		</dependency>
 
-		<!-- 2) jjwt-impl: implementacja (scope=runtime, bo nie potrzebujesz w czasie kompilacji) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
@@ -77,13 +76,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- 3) jjwt-jackson: moduł do parsowania JSON (również runtime-only) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>

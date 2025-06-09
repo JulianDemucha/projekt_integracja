@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { fetchReplies, deleteCommentById } from '../api/comments';
-import { AuthContext } from '../context/AuthContext';
+import React, {useEffect, useState, useContext} from 'react';
+import {fetchReplies, deleteCommentById} from '../api/comments';
+import {AuthContext} from '../context/AuthContext';
 
-const RepliesList = ({ parentId }) => {
-    const { user } = useContext(AuthContext);
+const RepliesList = ({parentId}) => {
+    const {user} = useContext(AuthContext);
     const [repliesPage, setRepliesPage] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [loading, setLoading] = useState(false);
