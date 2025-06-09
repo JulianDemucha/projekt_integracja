@@ -11,10 +11,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    // Klucz sekretu — w aplikacji produkcyjnej przechowuj w bezpiecznym miejscu (env var, vault, itp.)
     private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    // Czas życia tokenu w ms (np. 1 godzina = 3_600_000 ms)
+    // Czas życia tokenu w ms (1 godzina = 3_600_000 ms)
     private final long EXPIRATION_MS = 3_600_000;
 
     public String generateToken(String username) {
