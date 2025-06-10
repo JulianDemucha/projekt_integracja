@@ -10,72 +10,88 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GastronomyRevenueService {
 
-    public Map<String, List<GastronomyRevenue>> loadGastronomyRevenueDataFromClasspath(String resourcePath) throws IOException {
+    public List<GastronomyRevenue> loadGastronomyRevenueDataFromClasspath(String resourcePath) throws IOException {
         Resource resource = new ClassPathResource(resourcePath);
-        Map<String, List<GastronomyRevenue>> result = new LinkedHashMap<>();
+        List<GastronomyRevenue> allData = new ArrayList<>();
 
         try (InputStream is = resource.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
+            // Wczytaj i podziel nagłówek
             String headerLine = reader.readLine();
-            if (headerLine == null) {
-                return result;
-            }
+            if (headerLine == null) return allData;
+            String[] headers = splitCsvLine(headerLine);
 
-            String[] headers = headerLine.split(";");
-            List<Integer> columnIndexes = new ArrayList<>();
+            // Znajdź indeksy kolumn i lata
             List<Integer> years = new ArrayList<>();
-
-            int headerPartsCount = headers.length;
-            for (int i = 2; i + 1 < headerPartsCount; i += 3) {
-                String maybeYearString = headers[i + 1];
-                try {
-                    int yr = Integer.parseInt(maybeYearString.trim());
-                    columnIndexes.add(i);
-                    years.add(yr);
-                } catch (NumberFormatException ex) {
+            List<Integer> colIndexes = new ArrayList<>();
+            for (int i = 0; i < headers.length; i++) {
+                String h = headers[i].replaceAll("^\"|\"$", ""); // usuwa cudzysłowy
+                if (h.startsWith("ogółem")) {
+                    String[] parts = h.split(";");
+                    if (parts.length >= 2) {
+                        try {
+                            years.add(Integer.parseInt(parts[1]));
+                            colIndexes.add(i);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
                 }
             }
 
+            // Przetwarzaj każdą linię danych
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(";", -1);
-                if (parts.length < 2) {
-                    continue;
-                }
-                String nazwa = parts[1];
-                List<GastronomyRevenue> list = new ArrayList<>();
-
-                for (int idx = 0; idx < columnIndexes.size(); idx++) {
-                    int colIndex = columnIndexes.get(idx);
-                    int year = years.get(idx);
-
-                    if (colIndex >= parts.length) {
-                        continue;
-                    }
-
-                    String rawValue = parts[colIndex].trim();
-                    if (rawValue.isEmpty()) {
-                        continue;
-                    }
-
-                    String normalized = rawValue.replace(",", ".");
+                String[] parts = splitCsvLine(line);
+                for (int idx = 0; idx < colIndexes.size(); idx++) {
+                    int col = colIndexes.get(idx);
+                    if (col >= parts.length) continue;
+                    String raw = parts[col].replaceAll("^\"|\"$", "").trim();
+                    if (raw.isEmpty()) continue;
+                    String normalized = raw.replace(',', '.');
                     try {
-                        double revenue = Double.parseDouble(normalized);
-                        list.add(new GastronomyRevenue(year, revenue));
-                    } catch (NumberFormatException e) {
-                    }
+                        double rev = Double.parseDouble(normalized);
+                        allData.add(new GastronomyRevenue(years.get(idx), rev));
+                    } catch (NumberFormatException ignore) {}
                 }
-
-                result.put(nazwa, list);
             }
         }
 
-        return result;
+        // Sortowanie po roku
+        return allData.stream()
+                .sorted(Comparator.comparingInt(GastronomyRevenue::getYear))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Dzieli linię CSV po średnikach, uwzględniając cudzysłowy.
+     */
+    private String[] splitCsvLine(String line) {
+        if (line == null) return new String[0];
+        List<String> result = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (c == '"') {
+                inQuotes = !inQuotes;
+                sb.append(c);
+            } else if (c == ';' && !inQuotes) {
+                result.add(sb.toString());
+                sb.setLength(0);
+            } else {
+                sb.append(c);
+            }
+        }
+        result.add(sb.toString());
+        return result.toArray(new String[0]);
     }
 }

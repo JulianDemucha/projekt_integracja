@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -21,33 +21,36 @@ public class GastronomyRevenueController {
         this.revenueService = revenueService;
     }
 
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping("/stats2")
     public ResponseEntity<List<GastronomyRevenue>> loadData() {
         try {
-            Map<String, List<GastronomyRevenue>> dataMap =
+            List<GastronomyRevenue> data =
                     revenueService.loadGastronomyRevenueDataFromClasspath("data2.csv");
-
-            List<GastronomyRevenue> data = dataMap.values().stream().findFirst().orElse(List.of());
-
             return ResponseEntity.ok(data);
         } catch (IOException e) {
             return ResponseEntity.status(500).build();
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
+    //nie uzywany filtering, ale w razie co jest
     @GetMapping(value = "/stats2/export", produces = "text/csv")
-    public void exportStats2Csv(HttpServletResponse response) throws IOException {
-        Map<String, List<GastronomyRevenue>> dataMap =
+    public void exportStats2Csv(
+            @RequestParam int minYear,
+            @RequestParam int maxYear,
+            HttpServletResponse response
+    ) throws IOException {
+        List<GastronomyRevenue> allData =
                 revenueService.loadGastronomyRevenueDataFromClasspath("data2.csv");
-        List<GastronomyRevenue> data = dataMap.values().stream().findFirst().orElse(List.of());
+
+        List<GastronomyRevenue> filtered = allData.stream()
+                .filter(d -> d.getYear() >= minYear && d.getYear() <= maxYear)
+                .collect(Collectors.toList());
 
         response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=stats2.csv");
+        response.setHeader("Content-Disposition", "attachment; filename=stats2_filtered.csv");
         try (PrintWriter writer = response.getWriter()) {
             writer.println("year,revenue");
-            for (GastronomyRevenue g : data) {
+            for (GastronomyRevenue g : filtered) {
                 writer.printf("%d,%.2f%n", g.getYear(), g.getRevenue());
             }
         }

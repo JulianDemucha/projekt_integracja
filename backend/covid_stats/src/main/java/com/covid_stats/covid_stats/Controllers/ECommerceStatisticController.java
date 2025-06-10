@@ -26,6 +26,7 @@ public class ECommerceStatisticController {
         return service.getStats(from, to);
     }
 
+    //nie uzywany filtering, ale w razie co jest
     @CrossOrigin(origins = "http://localhost:5173", methods = RequestMethod.GET)
     @GetMapping(value = "/stats/export", produces = "text/csv")
     public void exportStatsCsv(
