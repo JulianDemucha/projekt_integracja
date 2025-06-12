@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -12,7 +11,6 @@ export const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    // Przy mountowaniu – sprawdzamy localStorage
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         const storedCreds = localStorage.getItem('basicCreds');

@@ -62,7 +62,7 @@ public class CommentService {
         return commentRepository.save(reply);
     }
 
-    // pobiera wszystkie „glowne, root” komentarze (tych bez parent), stronicowanie po 10
+    // pobiera wszystkie „glowne/root” komentarze (tych bez parent), stronicowanie po 10
     @Transactional(readOnly = true)
     public Page<Comment> getRootComments(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());

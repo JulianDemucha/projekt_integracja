@@ -1,11 +1,10 @@
-// src/api/comments.js
 import axios from 'axios';
 
 const API_BASE = 'http://localhost:8080';
 
-// Liczba root-komentarzy na stronę: 10
+
 const ROOT_PAGE_SIZE = 10;
-// Liczba odpowiedzi na stronę: 5
+
 const REPLIES_PAGE_SIZE = 5;
 
 export const fetchRootComments = async (page = 0) => {

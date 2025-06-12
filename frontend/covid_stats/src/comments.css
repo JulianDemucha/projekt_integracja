@@ -56,9 +56,6 @@
     background-color: #2563eb;
 }
 
-/*
-   Inline formularz dodawania komentarza
-*/
 .new-comment-form-inline {
     display: flex;
     flex-direction: column;

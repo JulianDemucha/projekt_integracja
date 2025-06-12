@@ -41,8 +41,7 @@ public class SecurityConfig {
                         // logowanie
                         .requestMatchers("/auth/**").permitAll()
 
-                        /* POST do rejestracji (niestety nie ma zadnej capathy ani weryfikacji maila,
-                        ale moze ktos nie z ddosuje) */
+                        /* POST do rejestracji */
                         .requestMatchers(HttpMethod.POST, "/users/**").permitAll()
 
                         // GET,PUT na users dla adm w razie co
@@ -51,7 +50,7 @@ public class SecurityConfig {
                         // POST na komentarze (tworzenie dla zalogowanych)
                         .requestMatchers(HttpMethod.POST, "/api/comments/**").authenticated()
                         // DELETE na komentarze (niby dla zalogowanych ale w kontrolerze jest preauthorize)
-                        // "hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)"
+                        // preauthor w kontrolerze: "hasRole('ADMIN') or @commentSecurity.isCommentAuthor(#id, authentication.name)"
                         .requestMatchers(HttpMethod.DELETE, "/api/comments/**").authenticated()
                         // GETY na export dla zalogowanych
                         .requestMatchers(HttpMethod.GET, "/api/stats/**").authenticated()

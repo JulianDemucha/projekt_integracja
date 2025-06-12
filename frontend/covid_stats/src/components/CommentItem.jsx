@@ -15,7 +15,6 @@ const CommentItem = ({comment, onDeleted}) => {
 
     const authorName = comment.author?.username || 'Anonim';
 
-    // Czy zalogowany może usunąć ten komentarz?
     const canDeleteComment =
         user?.role === 'ROLE_ADMIN' || user?.id === comment.author?.id;
 
@@ -62,7 +61,7 @@ const CommentItem = ({comment, onDeleted}) => {
 
     return (
         <div className="comment-item">
-            {/* Nagłówek: autor po lewej, data po prawej */}
+            {/* Nagłówek */}
             <div className="comment-header">
                 <p className="comment-author">{authorName}</p>
                 <p className="comment-date">
