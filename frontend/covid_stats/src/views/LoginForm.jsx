@@ -1,9 +1,8 @@
-// src/views/LoginForm.jsx
 import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import '../LoginForm.css'; // jeśli masz własne style
+import '../LoginForm.css';
 
 export default function LoginForm() {
     const { setUser, setAuthHeader } = useContext(AuthContext);
@@ -25,7 +24,7 @@ export default function LoginForm() {
         setError(null);
         setLoading(true);
         try {
-            // Tworzymy nagłówek Basic
+            // nagłówek Basic
             const basicHeader = 'Basic ' + btoa(`${credentials.username}:${credentials.password}`);
             const response = await axios.post(
                 'http://localhost:8080/auth/login',
@@ -40,8 +39,7 @@ export default function LoginForm() {
                 }
             );
 
-            const userData = response.data; // backend zwraca { id, username, role }
-            // Zapisujemy usera i nagłówek w konteście i localStorage
+            const userData = response.data;
             setUser(userData);
             setAuthHeader(basicHeader);
 

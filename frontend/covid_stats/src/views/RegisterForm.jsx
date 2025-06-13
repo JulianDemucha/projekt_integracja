@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import '../RegisterForm.css';
 
 export default function RegisterForm() {
+    const { setUser, setAuthHeader } = useContext(AuthContext);
     const [form, setForm] = useState({
         username: '',
         password: '',
         confirmPassword: '',
     });
     const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -34,43 +35,34 @@ export default function RegisterForm() {
 
         setLoading(true);
         try {
+            // Rejestracja
             await axios.post('http://localhost:8080/users', {
                 username: form.username,
                 password: form.password,
             });
-            console.log('Zarejestrowano:', form.username);
-            setSuccess(true);
-            setForm({ username: '', password: '', confirmPassword: '' });
+
+            // Automatyczne logowanie
+            const basicHeader = 'Basic ' + btoa(`${form.username}:${form.password}`);
+            const loginResponse = await axios.post(
+                'http://localhost:8080/auth/login',
+                { username: form.username, password: form.password },
+                { headers: { Authorization: basicHeader } }
+            );
+
+            const userData = loginResponse.data;
+            setUser(userData);
+            setAuthHeader(basicHeader);
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('basicCreds', basicHeader);
+
+            navigate('/');
         } catch (err) {
             console.error(err);
-            setError(err.response?.data || 'Błąd rejestracji');
+            setError(err.response?.data || 'Błąd rejestracji lub logowania');
         } finally {
             setLoading(false);
         }
     };
-
-    if (success) {
-        return (
-            <div className="register-container">
-                <div className="register-panel">
-                    <p className="success-text">
-                        Rejestracja zakończona. Możesz się teraz zalogować.
-                    </p>
-                    <div className="register-footer">
-                        <Link to="/auth/login" className="login-link">
-                            Przejdź do logowania
-                        </Link>
-                        <button
-                            onClick={() => navigate('/')}
-                            className="back-button"
-                        >
-                            Powrót do strony głównej
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="register-container">
@@ -129,7 +121,7 @@ export default function RegisterForm() {
                         className="register-button"
                         disabled={loading}
                     >
-                        {loading ? 'Rejestruję…' : 'Zarejestruj się'}
+                        {loading ? 'Przetwarzanie…' : 'Zarejestruj się'}
                     </button>
                 </form>
 
