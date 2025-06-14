@@ -6,11 +6,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GastronomyFacilitiesQuantityService {
@@ -57,9 +61,7 @@ public class GastronomyFacilitiesQuantityService {
         Map<String, List<GastronomyFacilitiesQuantity>> result = new LinkedHashMap<>();
 
         try (InputStream is = resource.getInputStream();
-             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-             BufferedReader reader = new BufferedReader(isr)) {
-
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
 
             String headerLine = reader.readLine();
             if (headerLine == null) {
@@ -84,8 +86,7 @@ public class GastronomyFacilitiesQuantityService {
                         columnIndexes.add(i);
                         columnTypes.add(type);
                         columnYears.add(year);
-                    } catch (NumberFormatException ex) {
-                    }
+                    } catch (NumberFormatException ex) {}
                 }
             }
 
@@ -126,5 +127,27 @@ public class GastronomyFacilitiesQuantityService {
         }
 
         return result;
+    }
+
+    public List<GastronomyFacilitiesQuantity> loadFlatData(String resourcePath) throws IOException {
+        Map<String, List<GastronomyFacilitiesQuantity>> data = loadObjectsCountData(resourcePath);
+        return data.values().stream().flatMap(List::stream).collect(Collectors.toList());
+    }
+
+    public byte[] generateFilteredCsv(String resourcePath, int minYear, int maxYear, List<String> types) throws IOException {
+        List<GastronomyFacilitiesQuantity> filtered = loadFlatData(resourcePath).stream()
+                .filter(g -> g.getYear() >= minYear && g.getYear() <= maxYear)
+                .filter(g -> types.contains(g.getType()))
+                .collect(Collectors.toList());
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8))) {
+            writer.println("year,type,count");
+            for (GastronomyFacilitiesQuantity g : filtered) {
+                writer.printf("%d,%s,%d%n", g.getYear(), g.getType(), g.getCount());
+            }
+            writer.flush();
+            return baos.toByteArray();
+        }
     }
 }

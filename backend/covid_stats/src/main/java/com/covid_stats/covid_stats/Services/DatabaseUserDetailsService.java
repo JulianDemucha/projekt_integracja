@@ -1,10 +1,11 @@
 package com.covid_stats.covid_stats.Services;
 
 import com.covid_stats.covid_stats.Models.AppUser;
-import com.covid_stats.covid_stats.Repositories.AppUserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,19 +13,16 @@ import java.util.List;
 @Service
 public class DatabaseUserDetailsService implements UserDetailsService {
 
-    private final AppUserRepo repo;
+    private final AppUserService userService;
 
-    @Autowired
-    public DatabaseUserDetailsService(AppUserRepo repo) {
-        this.repo = repo;
+    public DatabaseUserDetailsService(AppUserService userService) {
+        this.userService = userService;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        AppUser user = repo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Użytkownik "+username+" nie istnieje"));
+        AppUser user = userService.findByUsernameOrThrow(username);
         return new User(
                 user.getUsername(),
                 user.getPassword(),

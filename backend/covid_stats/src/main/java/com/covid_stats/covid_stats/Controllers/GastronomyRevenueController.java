@@ -1,15 +1,18 @@
 package com.covid_stats.covid_stats.Controllers;
 
-import com.covid_stats.covid_stats.DTO.GastronomyRevenue;
 import com.covid_stats.covid_stats.Services.GastronomyRevenueService;
+import com.covid_stats.covid_stats.DTO.GastronomyRevenue;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -32,27 +35,20 @@ public class GastronomyRevenueController {
         }
     }
 
-    //nie uzywany filtering, ale w razie co jest
+    // nie używany filtering, ale w razie co jest
     @GetMapping(value = "/stats2/export", produces = "text/csv")
-    public void exportStats2Csv(
+    public ResponseEntity<byte[]> exportStats2Csv(
             @RequestParam int minYear,
-            @RequestParam int maxYear,
-            HttpServletResponse response
-    ) throws IOException {
-        List<GastronomyRevenue> allData =
-                revenueService.loadGastronomyRevenueDataFromClasspath("data2.csv");
-
-        List<GastronomyRevenue> filtered = allData.stream()
-                .filter(d -> d.getYear() >= minYear && d.getYear() <= maxYear)
-                .collect(Collectors.toList());
-
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=stats2_filtered.csv");
-        try (PrintWriter writer = response.getWriter()) {
-            writer.println("year,revenue");
-            for (GastronomyRevenue g : filtered) {
-                writer.printf("%d,%.2f%n", g.getYear(), g.getRevenue());
-            }
+            @RequestParam int maxYear
+    ) {
+        try {
+            byte[] csvBytes = revenueService.generateFilteredCsv("data2.csv", minYear, maxYear);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=stats2_filtered.csv")
+                    .contentType(MediaType.parseMediaType("text/csv"))
+                    .body(csvBytes);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

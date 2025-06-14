@@ -6,9 +6,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,15 +37,14 @@ public class GastronomyRevenueService {
             List<Integer> years = new ArrayList<>();
             List<Integer> colIndexes = new ArrayList<>();
             for (int i = 0; i < headers.length; i++) {
-                String h = headers[i].replaceAll("^\"|\"$", ""); // usuwa cudzysłowy
+                String h = headers[i].replaceAll("^\"|\"$", "");
                 if (h.startsWith("ogółem")) {
                     String[] parts = h.split(";");
                     if (parts.length >= 2) {
                         try {
                             years.add(Integer.parseInt(parts[1]));
                             colIndexes.add(i);
-                        } catch (NumberFormatException ignored) {
-                        }
+                        } catch (NumberFormatException ignored) {}
                     }
                 }
             }
@@ -71,9 +73,25 @@ public class GastronomyRevenueService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Dzieli linię CSV po średnikach, uwzględniając cudzysłowy.
-     */
+    public byte[] generateFilteredCsv(String resourcePath, int minYear, int maxYear) throws IOException {
+        List<GastronomyRevenue> filtered = loadGastronomyRevenueDataFromClasspath(resourcePath)
+                .stream()
+                .filter(d -> d.getYear() >= minYear && d.getYear() <= maxYear)
+                .collect(Collectors.toList());
+
+        // Budowanie CSV w pamięci
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8))) {
+
+            writer.println("year,revenue");
+            for (GastronomyRevenue g : filtered) {
+                writer.printf("%d,%.2f%n", g.getYear(), g.getRevenue());
+            }
+            writer.flush();
+            return baos.toByteArray();
+        }
+    }
+
     private String[] splitCsvLine(String line) {
         if (line == null) return new String[0];
         List<String> result = new ArrayList<>();

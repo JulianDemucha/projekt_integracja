@@ -1,17 +1,22 @@
 package com.covid_stats.covid_stats.Services;
 
+import com.covid_stats.covid_stats.DTO.ECommerceEnterprisesPercent;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.covid_stats.covid_stats.DTO.ECommerceEnterprisesPercent;
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
+import java.util.stream.Collectors;
 
 @Component
 public class ECommerceStatisticService {
@@ -53,6 +58,21 @@ public class ECommerceStatisticService {
     public List<ECommerceEnterprisesPercent> getStats(int from, int to) {
         return stats.stream()
                 .filter(s -> s.getYear() >= from && s.getYear() <= to)
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    public byte[] generateFilteredCsv(int from, int to) throws IOException {
+        List<ECommerceEnterprisesPercent> filtered = getStats(from, to);
+
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8))) {
+
+            writer.println("year,percent");
+            for (ECommerceEnterprisesPercent e : filtered) {
+                writer.printf("%d,%.2f%n", e.getYear(), e.getPercent());
+            }
+            writer.flush();
+            return baos.toByteArray();
+        }
     }
 }
