@@ -2,8 +2,8 @@
 
 ## 🛠️ Stos technologiczny
 
-- **Frontend:** React + Vite
 - **Backend:** Spring Boot
+- **Frontend:** React + Vite
 - **Baza danych:** MySQL 
 - **Docker:** Docker + Docker Compose
 	
